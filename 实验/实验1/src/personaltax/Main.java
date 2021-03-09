@@ -22,11 +22,11 @@ public class Main {
      */
     public static void main(String[] args) {
         System.out.println("欢迎使用自动计算个人所得税程序");
-        TaxTable taxtable = new TaxTable();
+        TaxTable taxtable = new TaxTable();             //创建计税规则表的对象实例
         System.out.println("-------------------------------");
-        printTable(taxtable);
+        printTable(taxtable);                           //打印默认计税规则
         System.out.println("-------------------------------");
-        funcSwitch(getInput(), taxtable);
+        funcSwitch(getInput(), taxtable);               //获取输入，选择对应功能
     }
 
     /**
@@ -34,7 +34,7 @@ public class Main {
      * @param taxtable 存储各级计税规则的表
      */
     static void printTable(TaxTable taxtable) {
-        int rank = taxtable.getRank_Num();
+        int rank = taxtable.getRank_Num();              //共有多少个临界点
         int[] separation = taxtable.getSeparations();
         double[] taxRate = taxtable.getTax_Rates();
         System.out.printf("当前起征点为%d元\n", taxtable.getTax_Threshold());
@@ -67,6 +67,7 @@ public class Main {
         while (funcNumber != 4) {
             switch (funcNumber) {
                 case 1:
+                    /* 进入计算所得税的程序 */
                     System.out.println("-------------------------------");
                     System.out.println("正在使用个人所得税计算程序\n请输入您的收入：");
                     TaxCalculator taxCalculator = new TaxCalculator();
@@ -75,6 +76,7 @@ public class Main {
                     System.out.println("-------------------------------");
                     break;
                 case 2:
+                    /*更改起征点*/
                     System.out.println("-------------------------------");
                     System.out.println("目前的起征点为：" + taxtable.getTax_Threshold() + "元，请输入新的起征点：");
                     taxtable.setTax_Threshold(input.nextInt());
@@ -83,6 +85,7 @@ public class Main {
                     System.out.println("-------------------------------");
                     break;
                 case 3:
+                    /*更改计税规则*/
                     System.out.println("-------------------------------");
                     System.out.println("请输入分隔各级的金额：（第一个数字需要为0，各数字以空格分开，回车结束）");
                     String[] inputArray = input.nextLine().split(" ");
