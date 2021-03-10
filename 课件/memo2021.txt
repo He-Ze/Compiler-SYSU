@@ -1,0 +1,195 @@
+
+2018级计算机科学与技术（超算方向）专业必修课
+DCS290	编译原理	3学分	54学时
+DCS292	编译器构造实验	1学分	36学时
+
+主讲：李文军
+助教：杨元昊（2016级本科、2020级学硕）
+
+周二第5—6节课（14:20-15:05；15:15-16:00），A404【前10周】
+周四第5—6节课（14:20-15:05；15:15-16:00），A404【全学期】
+周四第7—8节课（16:20-17:05；17:15-18:00），实验中心D402【全学期】
+理论课期末考试时间：2021.07.08（周四）下午14:30——16:30。
+
+
+Profiles
+
+
+Part 1. Introduction
+====================================
+Week #1-a
+====================================
+1. Computer Languages - Use, Implement and Design
+2. Syntax, Semantics and Pragmatics
+3. Program Execution Models
+4. A Complete Compiling Procedure
+====================================
+Week #1-b
+====================================
+5. Software Architecture - Pipes and Filters
+6. Requirements for Compilers
+7. Construction of a Compiler
+
+Part 2. Formal Languages
+====================================
+Week #2-a
+====================================
+1. Formal Systems and Formal Languages
+2. How to Define a Language
+3. Context Free Grammar (CFG) and BNF
+4. Parse Tree and Ambiguity
+====================================
+Week #2-b
+====================================
+5. Top-Down vs. Bottom-Up
+6. Normalization of Grammars
+7. Classification of Formal Languages
+
+Part 3. Lexical Analysis
+====================================
+Week #3-a
+====================================
+1. Lexer (Scanner) Survey
+2. The Definition of Lexical Rules
+3. Automated Construction of Lexer
+4. Regular Expression vs. Regular Grammar
+====================================
+Week #3-b
+====================================
+5. State Transition Diagram
+6. Finite Automata (FA)
+====================================
+Week #4-a
+====================================
+7. Equivalence of Different FAs
+8. Minimization of Automata
+====================================
+Week #4-b
+====================================
+9. Regular Grammar vs. Finite Automata
+10. Regular Expression vs. Finite Automata
+11. Lexer Generators
+
+
+Part 4. Parsing
+====================================
+Week #5-a
+====================================
+1. Parser (Recognizer) Survey
+2. Preprocessing of Grammars
+
+Part 4.1  Top-down Parsing
+1. Introduction to Top-down Parsing
+====================================
+Week #5-b
+====================================
+2. Top-down Parsing with Backtracking
+3. Recursive Descent Predictive Parser
+====================================
+Week #6-a
+====================================
+4. LL(1) Parsing - A Table-Driven Approach
+5. Error Recovery in LL(1) Parsers
+6. Using Ambiguities in LL(1) Parsers
+
+Part 4.2  Bottom-up Parsing
+====================================
+Week #6-b
+====================================
+1. Review of Derivation and Reduction
+2. Stack Based Implementation of Shift-Reduce Parsing
+3. Operator Precedence Parsing (OPP)
+====================================
+Week #7-a
+====================================
+4. LR Parsing
+5. Constructing an SLR Parsing Table
+====================================
+Week #7-b
+====================================
+6. More on SLR Parsing
+====================================
+Week #8-a
+====================================
+7. Constructing an LR(1) Parsing Table
+====================================
+Week #8-b
+====================================
+8. Constructing an LALR Parsing Table
+9. Using Ambiguities in LR Parsers
+
+Part 5. Syntax Directed Translation
+====================================
+Week #9-a
+====================================
+1. Introduction to Syntax-Directed Translation
+2. A General Framework for Syntax-Directed Translation
+3. Syntax-Directed Definition
+4. S-Attribute Definition
+====================================
+Week #9-b
+====================================
+5. L-Attribute Definition
+6. Implementing L-Attribute Definition in Predictive Parsing
+====================================
+Week #11
+====================================
+7. Implementing L-Attribute Definition in LR Parsing
+8. Recursive Evaluation
+
+Part 6. Semantic Analysis and Intermediate Code Generation
+====================================
+Week #12
+====================================
+1. Introduction to Intermediate Code
+2. Translation Scheme for Delarative Statements
+====================================
+Week #13
+====================================
+3. Translation Scheme for Assignment Statements
+4. Translation Scheme for Array Accessings
+5. Translation Scheme for Boolean Expressions
+====================================
+Week #14
+====================================
+6. Back Patching
+7. Brief Introduction to Other Statements
+8. Introduction to yacc
+
+Part 7. Runtime Environment
+====================================
+Week #15
+====================================
+1. Introduction to Runtime Environment
+2. Memory Allocation and Activation Record
+3. Static Scope vs. Dynamic Scope
+4. Parameter Passing
+5. Design of Symbol Tables
+
+Part 8. Intermediate Code Optimization
+====================================
+Week #16
+====================================
+1. Introduction
+2. Local Optimization
+====================================
+Week #17
+====================================
+3. Control Flow Analysis and Loop Optimization
+4. Dataflow Analysis & Global Optimization
+
+Part 9. Target Code Generation
+====================================
+Week #18
+====================================
+1. Introduction to Target Machines
+2. Runtime Memory Management
+3. A Simple Code Generator
+
+Part 10. Advanced Topics in Compiler Construction
+====================================
+Week #19
+====================================
+1. Super Computers and Super Compilers
+2. Java Compilers: JIT and HotSpot
+
