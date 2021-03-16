@@ -4,22 +4,10 @@ package personaltax;
  * 根据计税规则维护一个表，包括创建和修改
  */
 public class TaxTable {
-    /**
-     * The Tax threshold.
-     */
-    private int taxThreshold;
-    /**
-     * The Rank num.
-     */
-    private int rankNum;
-    /**
-     * The Separation.
-     */
-    private int[] separation;
-    /**
-     * The Tax rate.
-     */
-    private double[] taxRate;
+    private int taxThreshold;           //计税起征点
+    private int rankNum;                //分界点的个数
+    private int[] separation;           //存储分界点金额的数组
+    private double[] taxRate;           //存储各级税率的数组
 
     /**
      * 构造函数，默认起征点1600元

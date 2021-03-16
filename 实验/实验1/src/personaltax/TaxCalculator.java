@@ -21,7 +21,7 @@ public class TaxCalculator {
         if (income < taxtable.getTax_Threshold()) {
             return 0;
         }
-        int _income = income - taxtable.getTax_Threshold();
+        int _income = income - taxtable.getTax_Threshold();     //应该计税的金额
         for (rank = 1; rank < taxtable.getRank_Num() && _income > taxtable.getSeparation(rank); rank++) {
             tax += (taxtable.getSeparation(rank) - taxtable.getSeparation(rank - 1)) * taxtable.getTax_Rate(rank - 1);
         }
