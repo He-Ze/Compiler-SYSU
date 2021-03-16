@@ -9,7 +9,7 @@ public class TaxCalculator {
      *
      * @param income   收入的金额
      * @param taxtable 存储计算税金额规则的表
-     * @return 个人所得税的金额
+     * @return 个人所得税的金额 double
      */
     public double taxCalculate(int income, TaxTable taxtable) {
         if (income < 0) {

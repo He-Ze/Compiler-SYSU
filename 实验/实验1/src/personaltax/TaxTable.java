@@ -4,9 +4,21 @@ package personaltax;
  * 根据计税规则维护一个表，包括创建和修改
  */
 public class TaxTable {
+    /**
+     * The Tax threshold.
+     */
     private int taxThreshold;
+    /**
+     * The Rank num.
+     */
     private int rankNum;
+    /**
+     * The Separation.
+     */
     private int[] separation;
+    /**
+     * The Tax rate.
+     */
     private double[] taxRate;
 
     /**
@@ -23,7 +35,8 @@ public class TaxTable {
 
     /**
      * 获取起征点金额
-     * @return 起征点金额
+     *
+     * @return 起征点金额 tax threshold
      */
     public int getTax_Threshold() {
         return taxThreshold;
@@ -31,7 +44,8 @@ public class TaxTable {
 
     /**
      * 获取一共分几级
-     * @return 临界点的个数
+     *
+     * @return 临界点的个数 rank num
      */
     public int getRank_Num() {
         return rankNum;
@@ -39,7 +53,8 @@ public class TaxTable {
 
     /**
      * 获取所有临界点金额
-     * @return 各临界点金额组成的数组
+     *
+     * @return 各临界点金额组成的数组 int [ ]
      */
     public int[] getSeparations() {
         return separation;
@@ -47,8 +62,9 @@ public class TaxTable {
 
     /**
      * 获取某个临界点金额
+     *
      * @param i 想获得第i个临界点金额
-     * @return 第i个临界点金额
+     * @return 第i个临界点金额 separation
      */
     public int getSeparation(int i) {
         return separation[i];
@@ -56,7 +72,8 @@ public class TaxTable {
 
     /**
      * 获取各级税率
-     * @return 各级税率组成的数组
+     *
+     * @return 各级税率组成的数组 double [ ]
      */
     public double[] getTax_Rates() {
         return taxRate;
@@ -64,8 +81,9 @@ public class TaxTable {
 
     /**
      * 获取某级税率
+     *
      * @param i 想获得第i级税率
-     * @return 第i级税率
+     * @return 第i级税率 tax rate
      */
     public double getTax_Rate(int i) {
         return taxRate[i];
@@ -73,6 +91,7 @@ public class TaxTable {
 
     /**
      * 设置分的级数
+     *
      * @param newRankNum 新的等级数量
      */
     public void setRankNum(int newRankNum) {
@@ -81,6 +100,7 @@ public class TaxTable {
 
     /**
      * 设置新的起征点金额，并保证金额不小于0
+     *
      * @param newThreshold 新的起征点金额
      */
     public void setTax_Threshold(int newThreshold) {
@@ -95,6 +115,7 @@ public class TaxTable {
 
     /**
      * 设置新的临界点，并保证金额数均不小于0
+     *
      * @param newSeparation 新的临界点组成的数组
      */
     public void setSeparation(int[] newSeparation) {
@@ -111,6 +132,7 @@ public class TaxTable {
 
     /**
      * 设置新的税率，并保证税率均合法（在0、1之间）
+     *
      * @param newRate 新的税率组成的数组
      */
     public void setTaxRate(double[] newRate) {
