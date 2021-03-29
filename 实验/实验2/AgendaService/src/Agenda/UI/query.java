@@ -1,13 +1,17 @@
 package Agenda.UI;
 
+import Agenda.BusinessLogic.User;
+
+import java.util.List;
+
 public class query implements Commamd{
-    public int check(String[] command){
+    public boolean check(String[] command){
         if(command.length==5)
-            return 1;
+            return true;
         else
-            return 0;
+            return false;
     }
-    public void exec(String[] command){
+    public void exec(String[] command, List<User> users){
 
     }
 }
