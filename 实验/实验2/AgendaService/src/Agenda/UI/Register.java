@@ -10,8 +10,8 @@ public class Register implements Commamd{
     public void exec(String[] command, List<User> users){
         User newUser = new User(command[1],command[2]);
         users.add(newUser);
-        System.out.println("  --------------------------------------------------------------");
+        System.out.println("  ------------------------------------------------------------------");
         System.out.println("  欢迎"+command[1]+"!注册成功！");
-        System.out.println("  --------------------------------------------------------------");
+        System.out.println("  ------------------------------------------------------------------");
     }
 }

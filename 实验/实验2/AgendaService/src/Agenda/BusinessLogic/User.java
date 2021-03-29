@@ -14,24 +14,30 @@ public class User {
     public boolean checkUser(String name, String password){
         return name.equals(this.userName) && password.equals(this.password);
     }
-
     public String getUserName() {
         return userName;
     }
-    public boolean addAgent(String user1,String user2,String[] date1,String[] date2, String title,List<User> users){
+    public boolean addAgent(int indexOfUser1,int indexOfUser2,String user1,String user2,String[] date1,String[] date2, String title,List<User> users){
         Agent newAgent =new Agent(user1,user2,date1,date2,title);
-        for(int i=0;i<users.size();i++){
-            for(int j=0;j<users.get(i).agents.size();j++) {
-                if ( (newAgent.getDate1().after(users.get(i).agents.get(j).getDate1()) && newAgent.getDate1().before(users.get(i).agents.get(j).getDate2()))||
-                        (newAgent.getDate2().after(users.get(i).agents.get(j).getDate1()) && newAgent.getDate2().before(users.get(i).agents.get(j).getDate2()))){
-                    System.out.println("  --------------------------------------------------------------");
-                    System.out.println("  此日程与其它日程时间冲突，添加失败");
-                    System.out.println("  --------------------------------------------------------------");
-                    return false;
-                }
+        Agent newAgent2 =new Agent(user2,user1,date1,date2,title);
+        if (hasConflict(indexOfUser1, users, newAgent))
+            return false;
+        if (hasConflict(indexOfUser1, users, newAgent2))
+            return false;
+        agents.add(newAgent);
+        users.get(indexOfUser2).agents.add(newAgent2);
+        return true;
+    }
+    public boolean hasConflict(int indexOfUser, List<User> users, Agent newAgent) {
+        for(int j=0;j<users.get(indexOfUser).agents.size();j++) {
+            if ( (newAgent.getDate1().after(users.get(indexOfUser).agents.get(j).getDate1()) && newAgent.getDate1().before(users.get(indexOfUser).agents.get(j).getDate2()))||
+                    (newAgent.getDate2().after(users.get(indexOfUser).agents.get(j).getDate1()) && newAgent.getDate2().before(users.get(indexOfUser).agents.get(j).getDate2()))){
+                System.out.println("  --------------------------------------------------------------");
+                System.out.println("  此日程与其它日程时间冲突，添加失败");
+                System.out.println("  --------------------------------------------------------------");
+                return true;
             }
         }
-        agents.add(newAgent);
-        return true;
+        return false;
     }
 }

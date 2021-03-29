@@ -36,16 +36,16 @@ public class AgendaService {
                     printHelp();
                     break;
                 default:
-                    System.out.println("  --------------------------------------------------------------");
+                    System.out.println("  ------------------------------------------------------------------");
                     System.out.println("  指令错误，请输入正确指令，输入help以获得提示");
-                    System.out.println("  --------------------------------------------------------------");
+                    System.out.println("  ------------------------------------------------------------------");
                     break;
             }
             assert c != null;
             if(!c.check(commands)){
-                System.out.println("  --------------------------------------------------------------");
+                System.out.println("  ------------------------------------------------------------------");
                 System.out.println("  参数个数不正确，请输入正确指令参数，输入help以获得提示");
-                System.out.println("  --------------------------------------------------------------");
+                System.out.println("  ------------------------------------------------------------------");
             }
             c.exec(commands,users);
             System.out.print("$ ");
@@ -54,7 +54,7 @@ public class AgendaService {
         }
     }
     static void printHelp(){
-        System.out.println("==============================================================");
+        System.out.println("====================================================================");
         System.out.println("Welcome to HeZe's agenda manage programe.");
         System.out.print("You can type the commands below:\n" +
                 "1. register [userName] [password]\n" +
@@ -66,6 +66,6 @@ public class AgendaService {
                 "7. help" +
                 "8. quit\n" +
                 "（注：时间请以\"年-月-日-时-分\"格式输入）\n");
-        System.out.println("==============================================================");
+        System.out.println("====================================================================");
     }
 }
