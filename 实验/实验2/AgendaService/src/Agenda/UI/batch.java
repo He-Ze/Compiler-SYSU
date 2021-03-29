@@ -4,14 +4,12 @@ import Agenda.BusinessLogic.User;
 
 import java.util.List;
 
-public class batch implements Commamd{
-    public boolean check(String[] command){
-        if(command.length==2)
-            return true;
-        else
-            return false;
+public class batch implements Command {
+    public boolean check(String[] command) {
+        return command.length == 2;
     }
-    public void exec(String[] command, List<User> users){
+
+    public void exec(String[] command, List<User> users) {
 
     }
 }

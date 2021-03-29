@@ -4,7 +4,8 @@ import Agenda.BusinessLogic.User;
 
 import java.util.List;
 
-public interface Commamd {
-    public boolean check(String[] command);
-    public void exec(String[] command, List<User> users);
+public interface Command {
+    boolean check(String[] command);
+
+    void exec(String[] command, List<User> users);
 }
