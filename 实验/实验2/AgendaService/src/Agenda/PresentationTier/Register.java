@@ -5,7 +5,7 @@ import Agenda.BusinessLogic.User;
 import java.util.List;
 
 /**
- * The type Register.
+ * 用户注册
  */
 public class Register implements Command {
     public boolean check(String[] command) {

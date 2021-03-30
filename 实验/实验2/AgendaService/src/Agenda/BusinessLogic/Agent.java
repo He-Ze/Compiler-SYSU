@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 /**
- * The type Agent.
+ * 包含一个日程的所有信息的类
  */
 public class Agent {
     private final String user1;
@@ -15,13 +15,13 @@ public class Agent {
     private final int ID;
 
     /**
-     * Instantiates a new Agent.
+     * 实例化一个日程的构造方法，随机生成ID
      *
-     * @param user1 the user 1
-     * @param user2 the user 2
-     * @param date1 the date 1
-     * @param date2 the date 2
-     * @param title the title
+     * @param user1 当前用户用户名
+     * @param user2 被邀请用户用户名
+     * @param date1 开始时间
+     * @param date2 结束时间
+     * @param title 标签
      */
     public Agent(String user1, String user2, String[] date1, String[] date2, String title) {
         Random r = new Random();
@@ -34,14 +34,14 @@ public class Agent {
     }
 
     /**
-     * Instantiates a new Agent.
+     * 实例化一个日程的构造方法，使用传入的ID
      *
-     * @param user1 the user 1
-     * @param user2 the user 2
-     * @param date1 the date 1
-     * @param date2 the date 2
-     * @param title the title
-     * @param ID    the id
+     * @param user1 当前用户用户名
+     * @param user2 被邀请用户用户名
+     * @param date1 开始时间
+     * @param date2 结束时间
+     * @param title 标签
+     * @param ID    想要设置的ID
      */
     public Agent(String user1, String user2, String[] date1, String[] date2, String title, int ID) {
         this.user1 = user1;
@@ -53,7 +53,7 @@ public class Agent {
     }
 
     /**
-     * Print info.
+     * 打印某一日程信息
      */
     public void printInfo() {
         System.out.println("  您将在" + this.date1.get(Calendar.YEAR) + "年" + this.date1.get(Calendar.MONTH) + "月" +
@@ -64,36 +64,46 @@ public class Agent {
     }
 
     /**
-     * Gets date 1.
+     * 获取当前日程开始日期
      *
-     * @return the date 1
+     * @return 当前日程开始日期 date 1
      */
     public Calendar getDate1() {
         return date1;
     }
 
     /**
-     * Gets date 2.
+     * 获取当前日程结束日期
      *
-     * @return the date 2
+     * @return 当前日程结束日期 date 2
      */
     public Calendar getDate2() {
         return date2;
     }
 
     /**
-     * Gets id.
+     * 获取当前日程ID
      *
-     * @return the id
+     * @return 当前日程ID id
      */
     public int getID() {
         return ID;
     }
 
+    /**
+     * 获取当前日程创建者用户名
+     *
+     * @return 当前日程创建者用户名
+     */
     public String getUser1() {
         return user1;
     }
 
+    /**
+     * 获取当前日程被邀请者用户名
+     *
+     * @return 当前日程被邀请者用户名
+     */
     public String getUser2() {
         return user2;
     }
