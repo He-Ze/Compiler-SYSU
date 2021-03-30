@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,40 +15,44 @@ public class AgendaService {
         Command c = null;
         List<User> users = new ArrayList<>();
         while (!commands[0].equalsIgnoreCase("quit")) {
-            switch (commands[0].toLowerCase()) {
-                case "register":
-                    c = new Register();
+            if(commands[0].equalsIgnoreCase("batch")){
+                System.out.print("$ ");
+                try {
+                    FileReader m= null;
+                    m = new FileReader(commands[1]);
+                    BufferedReader reader=new BufferedReader(m);
+                    String nextLine= null;
+                    nextLine = reader.readLine();
+                    while (!(nextLine ==null)){
+                        System.out.println(nextLine);
+                        commands=nextLine.split(" ");
+                        c=switchCommand(commands);
+                        if(c==null)
+                            break;
+                        if (!c.check(commands)) {
+                            System.out.println("  参数个数不正确，请输入正确指令参数，输入help以获得提示");
+                        }
+                        c.exec(commands, users);
+                        System.out.print("$ ");
+                        nextLine=reader.readLine();
+                    }
                     break;
-                case "add":
-                    c = new add();
-                    break;
-                case "query":
-                    c = new query();
-                    break;
-                case "delete":
-                    c = new delete();
-                    break;
-                case "clear":
-                    c = new clear();
-                    break;
-                case "batch":
-                    c = new batch();
-                    break;
-                case "help":
-                    printHelp();
-                    break;
-                default:
-                    System.out.println("  指令错误，请输入正确指令，输入help以获得提示");
-                    break;
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            assert c != null;
-            if (!c.check(commands)) {
-                System.out.println("  参数个数不正确，请输入正确指令参数，输入help以获得提示");
+            else {
+                c = switchCommand(commands);
+                if (c == null)
+                    break;
+                if (!c.check(commands)) {
+                    System.out.println("  参数个数不正确，请输入正确指令参数，输入help以获得提示");
+                }
+                c.exec(commands, users);
+                System.out.print("$ ");
+                input = new Scanner(System.in);
+                commands = input.nextLine().split(" ");
             }
-            c.exec(commands, users);
-            System.out.print("$ ");
-            input = new Scanner(System.in);
-            commands = input.nextLine().split(" ");
         }
     }
 
@@ -65,5 +70,26 @@ public class AgendaService {
                 "8. quit\n" +
                 "（注：时间请以\"年-月-日-时-分\"格式输入）\n");
         System.out.println("====================================================================");
+    }
+
+    static Command switchCommand (String[] commands){
+        switch (commands[0].toLowerCase()) {
+            case "register":
+                return new Register();
+            case "add":
+                return new add();
+            case "query":
+                return new query();
+            case "delete":
+                return new delete();
+            case "clear":
+                return new clear();
+            case "help":
+                printHelp();
+                break;
+            default:
+                System.out.println("  指令错误，请输入正确指令，输入help以获得提示");
+        }
+        return null;
     }
 }

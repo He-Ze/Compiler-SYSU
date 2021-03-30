@@ -30,9 +30,6 @@ public class Agent {
         this.ID = ID;
     }
 
-    //add t1 123 t3 2021-3-20-8-30 2021-3-20-9-30 test1
-    //add t2 123 t3 2021-3-21-8-30 2021-3-21-9-30 test2
-    //query t3 123 2021-3-19-8-0 2021-4-20-8-0
     public void printInfo() {
         System.out.println("  您将在" + this.date1.get(Calendar.YEAR) + "年" + this.date1.get(Calendar.MONTH) + "月" +
                 this.date1.get(Calendar.DATE) + "日" + this.date1.get(Calendar.HOUR_OF_DAY) + ":" + this.date1.get(Calendar.MINUTE) +
