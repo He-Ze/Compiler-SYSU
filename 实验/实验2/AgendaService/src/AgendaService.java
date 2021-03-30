@@ -44,7 +44,7 @@ public class AgendaService {
                         System.out.print("$ ");
                         nextLine = reader.readLine();
                     }
-                    //break;
+                    commands = input.nextLine().split(" ");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
