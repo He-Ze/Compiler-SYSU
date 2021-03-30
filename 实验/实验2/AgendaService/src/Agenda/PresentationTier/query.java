@@ -1,10 +1,13 @@
-package Agenda.UI;
+package Agenda.PresentationTier;
 
 import Agenda.BusinessLogic.User;
 
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * The type Query.
+ */
 public class query implements Command {
     public boolean check(String[] command) {
         return command.length == 5;

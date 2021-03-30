@@ -3,45 +3,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import Agenda.UI.*;
+import Agenda.PresentationTier.*;
 import Agenda.BusinessLogic.*;
 
+/**
+ * The type Agenda service.
+ */
 public class AgendaService {
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         printHelp();
         System.out.print("$ ");
         Scanner input = new Scanner(System.in);
         String[] commands = input.nextLine().split(" ");
-        Command c = null;
+        Command c;
         List<User> users = new ArrayList<>();
         while (!commands[0].equalsIgnoreCase("quit")) {
-            if(commands[0].equalsIgnoreCase("batch")){
+            if (commands[0].equalsIgnoreCase("batch")) {
                 System.out.print("$ ");
                 try {
-                    FileReader m= null;
+                    FileReader m;
                     m = new FileReader(commands[1]);
-                    BufferedReader reader=new BufferedReader(m);
-                    String nextLine= null;
+                    BufferedReader reader = new BufferedReader(m);
+                    String nextLine;
                     nextLine = reader.readLine();
-                    while (!(nextLine ==null)){
+                    while (!(nextLine == null)) {
                         System.out.println(nextLine);
-                        commands=nextLine.split(" ");
-                        c=switchCommand(commands);
-                        if(c==null)
+                        commands = nextLine.split(" ");
+                        c = switchCommand(commands);
+                        if (c == null)
                             break;
                         if (!c.check(commands)) {
                             System.out.println("  参数个数不正确，请输入正确指令参数，输入help以获得提示");
                         }
                         c.exec(commands, users);
                         System.out.print("$ ");
-                        nextLine=reader.readLine();
+                        nextLine = reader.readLine();
                     }
-                    break;
-                }catch (IOException e) {
+                    //break;
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            else {
+            } else {
                 c = switchCommand(commands);
                 if (c == null)
                     break;
@@ -56,6 +63,9 @@ public class AgendaService {
         }
     }
 
+    /**
+     * Print help.
+     */
     static void printHelp() {
         System.out.println("====================================================================");
         System.out.println("Welcome to HeZe's agenda manage programe.");
@@ -72,7 +82,13 @@ public class AgendaService {
         System.out.println("====================================================================");
     }
 
-    static Command switchCommand (String[] commands){
+    /**
+     * Switch command command.
+     *
+     * @param commands the commands
+     * @return the command
+     */
+    static Command switchCommand(String[] commands) {
         switch (commands[0].toLowerCase()) {
             case "register":
                 return new Register();

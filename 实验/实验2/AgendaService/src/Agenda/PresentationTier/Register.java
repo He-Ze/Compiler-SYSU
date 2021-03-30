@@ -1,9 +1,12 @@
-package Agenda.UI;
+package Agenda.PresentationTier;
 
 import Agenda.BusinessLogic.User;
 
 import java.util.List;
 
+/**
+ * The type Register.
+ */
 public class Register implements Command {
     public boolean check(String[] command) {
         return command.length == 3;

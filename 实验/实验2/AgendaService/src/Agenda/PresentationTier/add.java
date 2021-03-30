@@ -1,9 +1,12 @@
-package Agenda.UI;
+package Agenda.PresentationTier;
 
 import Agenda.BusinessLogic.User;
 
 import java.util.List;
 
+/**
+ * The type Add.
+ */
 public class add implements Command {
     public boolean check(String[] command) {
         return command.length == 7;
@@ -21,7 +24,7 @@ public class add implements Command {
                 break;
             }
         }
-        if (indexOfUser1 == users.size() - 1) {
+        if (indexOfUser1 == users.size()) {
             System.out.println("  该用户不存在，请输入正确的用户名，输入help以获得提示");
         } else {
             if (users.get(indexOfUser1).checkUser(command[1], command[2])) {
