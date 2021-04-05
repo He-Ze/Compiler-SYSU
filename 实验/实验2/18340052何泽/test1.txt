@@ -1,0 +1,13 @@
+register XiaoMing 123456
+register LiHua 654321
+register XiaoQiang 12345678
+register XiaoHong 5678
+add XiaoMing 123456 LiHua 2021-3-20-8-30 2021-3-20-9-30 数学
+add XiaoQiang 12345678 LiHua 2021-3-21-10-20 2021-3-21-12-20 语文
+add XiaoHong 5678 LiHua 2021-3-21-14-20 2021-3-21-16-20 英语
+add LiHua 654321 XiaoMing 2021-4-1-9-20 2021-4-1-10-40 体育
+query LiHua 654321 2021-3-19-8-0 2021-3-22-8-0
+query XiaoMing 123456 2021-3-19-8-0 2021-4-2-8-0
+clear XiaoMing 123456
+query LiHua 654321 2021-3-19-8-0 2021-3-22-8-0
+query XiaoMing 123456 2021-3-19-8-0 2021-4-2-8-0

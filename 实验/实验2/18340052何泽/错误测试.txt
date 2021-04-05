@@ -1,0 +1,8 @@
+register XiaoMing 123456
+register LiHua 654321
+register XiaoQiang 12345678
+register XiaoHong 5678
+clear aaa 123
+clear LiHua 23333
+add LiHua 654321 XiaoMing 2021-5-1-9-30 2021-5-1-10-30 玩
+add LiHua 654321 XiaoMing 2021-5-1-10-0 2021-5-1-11-0 test
