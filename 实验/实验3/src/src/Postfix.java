@@ -1,5 +1,13 @@
 import java.io.*;
 
+public class Postfix {
+	public static void main(String[] args) throws IOException {
+		System.out.println("Input an infix expression and output its postfix notation:");
+		new Parser().expr();
+		System.out.println("\nEnd of program.");
+	}
+}
+
 class Parser {
 	static int lookahead;
 
@@ -41,10 +49,3 @@ class Parser {
 	}
 }
 
-public class Postfix {
-	public static void main(String[] args) throws IOException {
-		System.out.println("Input an infix expression and output its postfix notation:");
-		new Parser().expr();
-		System.out.println("\nEnd of program.");
-	}
-}
