@@ -1,5 +1,7 @@
 import java.io.*;
 
+import javax.swing.plaf.synth.ColorType;
+
 public class Postfix {
 	public static void main(String[] args) throws IOException {
 		System.out.println("Input an infix expression and output its postfix notation:");
@@ -10,9 +12,11 @@ public class Postfix {
 
 class Parser {
 	static int lookahead;
+	static int length;
 
 	public Parser() throws IOException {
 		lookahead = System.in.read();
+		length=System.in.available();
 	}
 
 	void expr() throws IOException {
@@ -21,7 +25,7 @@ class Parser {
 	}
 
 	void rest() throws IOException {
-		while(lookahead=='+'||lookahead=='-'){
+		while(length>0){
 			if (lookahead == '+') {
 				match('+');
 				term();
@@ -30,7 +34,9 @@ class Parser {
 				match('-');
 				term();
 				System.out.write('-');
-			}
+			} 
+
+			length--;
 		}
 	}
 
