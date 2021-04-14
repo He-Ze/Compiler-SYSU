@@ -21,31 +21,31 @@ class Parser {
 	}
 
 	void rest() throws IOException {
-		if (lookahead == '+') {
-			match('+');
-			term();
-			System.out.write('+');
-			rest();
-		} else if (lookahead == '-') {
-			match('-');
-			term();
-			System.out.write('-');
-			rest();
-		} else {
-			// do nothing with the input
+		while(lookahead=='+'||lookahead=='-'){
+			if (lookahead == '+') {
+				match('+');
+				term();
+				System.out.write('+');
+			} else if (lookahead == '-') {
+				match('-');
+				term();
+				System.out.write('-');
+			}
 		}
 	}
 
 	void term() throws IOException {
-		if (Character.isDigit((char)lookahead)) {
-			System.out.write((char)lookahead);
+		if (Character.isDigit((char) lookahead)) {
+			System.out.write((char) lookahead);
 			match(lookahead);
-		} else  throw new Error("syntax error");
+		} else
+			throw new Error("syntax error");
 	}
 
 	void match(int t) throws IOException {
-		if (lookahead == t)  lookahead = System.in.read();
-		else  throw new Error("syntax error");
+		if (lookahead == t)
+			lookahead = System.in.read();
+		else
+			throw new Error("syntax error");
 	}
 }
-
