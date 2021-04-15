@@ -6,7 +6,8 @@ public class Postfix {
     public static void main(String[] args) throws IOException {
         System.out.println("Input an infix expression and output its postfix notation:");
         new Parser().expr();
-        System.out.println("\nEnd of program.");
+        System.out.println("\n------------------------------------------");
+        System.out.println("End of program.");
     }
 }
 
@@ -28,6 +29,7 @@ class Parser {
         }
         length=input.size();
         lookahead = input.get(indexOfLookahead);
+        System.out.println("------------------------------------------");
     }
 
     void expr() throws IOException {
@@ -41,6 +43,19 @@ class Parser {
 
     void rest() throws IOException {
         while(length>0){
+            if(indexOfLookahead<length-1 && Character.isDigit((char) lookahead)){
+                print2Locations(indexOfLookahead);
+                System.out.println("这两个运算量间缺少运算符，已自动忽略第二个运算量");
+                System.out.println("------------------------------------------");
+                indexOfLookahead++;
+                lookahead=input.get(indexOfLookahead);
+            } else if(indexOfLookahead<length-1 && lookahead!='+' && lookahead!='-'){
+                printLocation(indexOfLookahead);
+                System.out.println("非法运算符，已自动忽略，只支持+与-");
+                System.out.println("------------------------------------------");
+                indexOfLookahead++;
+                lookahead=input.get(indexOfLookahead);
+            }
             if (lookahead == '+') {
                 match('+');
                 term();
@@ -55,32 +70,33 @@ class Parser {
     }
 
     void term() throws IOException {
-        if (Character.isDigit((char) lookahead)) {
-            result.add((char) lookahead);
-            if(indexOfLookahead<length-1)
-                match(lookahead);
-        } else
-            throw new Error("syntax error");
+        while(!Character.isDigit((char) lookahead)){
+            printLocation(indexOfLookahead);
+            System.out.println("缺少左运算量，已自动忽略此运算符");
+            System.out.println("------------------------------------------");
+            indexOfLookahead++;
+            lookahead=input.get(indexOfLookahead);
+        }
+        result.add((char) lookahead);
+        if(indexOfLookahead<length-1)
+            match(lookahead);
     }
 
     void match(int t) throws IOException {
         if (lookahead == t) {
             indexOfLookahead++;
             lookahead = input.get(indexOfLookahead);
-            if(lookahead==' '){
-                System.out.println("--------------------------------");
-                printLocation(lookahead);
+            while(lookahead==' '){
+                printLocation(indexOfLookahead);
                 System.out.println("此处不应该有空格，已自动忽略");
-                System.out.println("--------------------------------");
+                System.out.println("------------------------------------------");
                 indexOfLookahead++;
                 lookahead = input.get(indexOfLookahead);
             }
-        }
-        else
+        } else
             throw new Error("syntax error");
     }
-    void printLocation(int t){
-        int index=input.lastIndexOf((char)t);
+    void printLocation(int index){
         for (Character character : input) {
             System.out.print(character);
         }
@@ -89,5 +105,15 @@ class Parser {
             System.out.print(' ');
         }
         System.out.println('^');
+    }
+    void print2Locations(int index){
+        for (Character character : input) {
+            System.out.print(character);
+        }
+        System.out.print('\n');
+        for (int i=0;i<index-1;i++){
+            System.out.print(' ');
+        }
+        System.out.println("^^");
     }
 }
