@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Postfix {
@@ -42,21 +41,22 @@ class Parser {
     }
 
     void rest() throws IOException {
-        while(length>0){
-            if(indexOfLookahead<length-1 && Character.isDigit((char) lookahead)){
+        while(length>=0){
+            if(indexOfLookahead<length && Character.isDigit((char) lookahead)){
                 print2Locations(indexOfLookahead);
                 System.out.println("这两个运算量间缺少运算符，已自动忽略第二个运算量");
                 System.out.println("------------------------------------------");
                 indexOfLookahead++;
                 lookahead=input.get(indexOfLookahead);
-            } else if(indexOfLookahead<length-1 && lookahead!='+' && lookahead!='-'){
+            }
+            else if(indexOfLookahead<length && lookahead!='+' && lookahead!='-'){
                 printLocation(indexOfLookahead);
                 System.out.println("非法运算符，已自动忽略，只支持+与-");
                 System.out.println("------------------------------------------");
                 indexOfLookahead++;
                 lookahead=input.get(indexOfLookahead);
             }
-            if (lookahead == '+') {
+            else if (lookahead == '+') {
                 match('+');
                 term();
                 result.add('+');
@@ -78,7 +78,7 @@ class Parser {
             lookahead=input.get(indexOfLookahead);
         }
         result.add((char) lookahead);
-        if(indexOfLookahead<length-1)
+        if(indexOfLookahead<input.size()-1)
             match(lookahead);
     }
 
