@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Postfix {
@@ -11,16 +12,22 @@ public class Postfix {
 
 class Parser {
     static int lookahead;
+    static int indexOfLookahead;
     static int length;
     static List<Character> result;
     static List<Character> input;
 
     public Parser() throws IOException {
-        lookahead = System.in.read();
-        length=System.in.available();
         result=new ArrayList<>();
         input=new ArrayList<>();
-        input.add((char)lookahead);
+        indexOfLookahead=0;
+        Scanner s=new Scanner(System.in);
+        String in=s.nextLine();
+        for(int i=0;i<in.length();i++){
+            input.add(in.charAt(i));
+        }
+        length=input.size();
+        lookahead = input.get(indexOfLookahead);
     }
 
     void expr() throws IOException {
@@ -43,14 +50,6 @@ class Parser {
                 term();
                 result.add('-');
             }
-             else if(lookahead==' '){
-                System.out.println("--------------------------------");
-             	System.out.println(input.get(input.lastIndexOf(' ')-1)+"之后不应该有空格，已自动忽略");
-             	System.out.println("--------------------------------");
-             	lookahead=System.in.read();
-                input.add((char)lookahead);
-             	continue;
-             }
             length--;
         }
     }
@@ -58,17 +57,37 @@ class Parser {
     void term() throws IOException {
         if (Character.isDigit((char) lookahead)) {
             result.add((char) lookahead);
-            match(lookahead);
+            if(indexOfLookahead<length-1)
+                match(lookahead);
         } else
             throw new Error("syntax error");
     }
 
     void match(int t) throws IOException {
         if (lookahead == t) {
-            lookahead = System.in.read();
-            input.add((char)lookahead);
+            indexOfLookahead++;
+            lookahead = input.get(indexOfLookahead);
+            if(lookahead==' '){
+                System.out.println("--------------------------------");
+                printLocation(lookahead);
+                System.out.println("此处不应该有空格，已自动忽略");
+                System.out.println("--------------------------------");
+                indexOfLookahead++;
+                lookahead = input.get(indexOfLookahead);
+            }
         }
         else
             throw new Error("syntax error");
+    }
+    void printLocation(int t){
+        int index=input.lastIndexOf((char)t);
+        for (Character character : input) {
+            System.out.print(character);
+        }
+        System.out.print('\n');
+        for (int i=0;i<index;i++){
+            System.out.print(' ');
+        }
+        System.out.println('^');
     }
 }
