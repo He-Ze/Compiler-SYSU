@@ -86,14 +86,14 @@ class Parser {
         while (length >= 0) {
             if (indexOfLookahead <= length && Character.isDigit((char) lookahead)) {
                 print2Locations(indexOfLookahead);
-                System.out.println("这两个运算量间缺少运算符，已自动忽略第二个运算量");
+                System.out.println("语法错误，这两个运算量间缺少运算符，已自动忽略第二个运算量");
                 System.out.println("------------------------------------------");
                 if (indexOfLookahead < length)
                     indexOfLookahead++;
                 lookahead = input.get(indexOfLookahead);
             } else if (indexOfLookahead <= length && lookahead != '+' && lookahead != '-') {
                 printLocation(indexOfLookahead);
-                System.out.println("非法运算符，已自动忽略，只支持+与-");
+                System.out.println("词法错误，非法运算符，已自动忽略，只支持+与-");
                 System.out.println("------------------------------------------");
                 if (indexOfLookahead < length)
                     indexOfLookahead++;
@@ -121,7 +121,7 @@ class Parser {
     void term() throws IOException {
         while (!Character.isDigit((char) lookahead)) {
             printLocation(indexOfLookahead);
-            System.out.println("缺少左运算量，已自动忽略此运算符");
+            System.out.println("语法错误，缺少左运算量，已自动忽略此运算符");
             System.out.println("------------------------------------------");
             indexOfLookahead++;
             lookahead = input.get(indexOfLookahead);
@@ -145,7 +145,7 @@ class Parser {
             lookahead = input.get(indexOfLookahead);
             while (lookahead == ' ') {
                 printLocation(indexOfLookahead);
-                System.out.println("此处不应该有空格，已自动忽略");
+                System.out.println("词法错误，此处不应该有空格，已自动忽略");
                 System.out.println("------------------------------------------");
                 indexOfLookahead++;
                 lookahead = input.get(indexOfLookahead);
