@@ -10,15 +10,15 @@
 
 ## 2. 无错误情况运行截图
 
-<img src="../图片/编译运行.png" alt="编译运行" style="zoom: 50%;" />
+<img src="图片/编译运行.png" alt="编译运行" style="zoom: 50%;" />
 
 测例1:
 
-<img src="../图片/测例1.png" alt="测例1" style="zoom:50%;" />
+<img src="图片/测例1.png" alt="测例1" style="zoom:50%;" />
 
 测例2:
 
-<img src="../图片/测例2.png" alt="测例2" style="zoom:50%;" />
+<img src="图片/测例2.png" alt="测例2" style="zoom:50%;" />
 
 **可以看出结果正确**
 
@@ -37,31 +37,31 @@
 
 - 非法运算符
 
-    <img src="../图片/非法运算符.png" alt="非法运算符" style="zoom:50%;" />
+    <img src="图片/非法运算符.png" alt="非法运算符" style="zoom:50%;" />
 
 - 数字间缺少运算符
 
-    <img src="../图片/两位数字.png" alt="两位数字" style="zoom:50%;" />
+    <img src="图片/两位数字.png" alt="两位数字" style="zoom:50%;" />
 
 - 两个运算符间缺少运算量
 
-    <img src="../图片/缺少运算量.png" alt="缺少运算量" style="zoom:50%;" />
+    <img src="图片/缺少运算量.png" alt="缺少运算量" style="zoom:50%;" />
 
 - 表达式中有空格
 
-    <img src="../图片/有空格.png" alt="有空格" style="zoom:50%;" />
+    <img src="图片/有空格.png" alt="有空格" style="zoom:50%;" />
 
 - 测例3
 
-    <img src="../图片/测例3.png" alt="测例3" style="zoom:50%;" />
+    <img src="图片/测例3.png" alt="测例3" style="zoom:50%;" />
 
 - 测例4
 
-    <img src="../图片/测例4.png" alt="测例4" style="zoom:50%;" />
+    <img src="图片/测例4.png" alt="测例4" style="zoom:50%;" />
 
 - 多个错误综合
 
-    <img src="../图片/多个错误.png" alt="多个错误" style="zoom:50%;" />
+    <img src="图片/多个错误.png" alt="多个错误" style="zoom:50%;" />
 
 **由上可以看出即使有多个错误依然可以准确定位显示信息并恢复继续向下检测与转换**
 
