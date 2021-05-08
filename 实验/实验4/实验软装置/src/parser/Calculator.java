@@ -10,8 +10,8 @@ import exceptions.*;
 /**
  * Main program of the expression based calculator ExprEval
  * 
- * @author [PENDING your name]
- * @version 1.00 (Last update: [PENDING the last update])
+ * @author HeZe
+ * @version 1.00 (Last update: 2021.5.8)
 **/
 public class Calculator
 {
@@ -26,8 +26,11 @@ public class Calculator
 	**/
 	public double calculate(String expression) throws ExpressionException
 	{
-		// You should substitute this method body ...
-		double result = ((int) (Math.random() * 1000000000)) / 100.0;
-		return result;
+		Parser parser = new Parser(expression);
+		try {
+			return parser.parse();
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 }
