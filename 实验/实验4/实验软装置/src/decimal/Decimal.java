@@ -17,5 +17,5 @@ public abstract class Symbol {
 	 * 返回symbol对应的string类型值
 	 * @return
 	 */ 
-	public abstract String getValueOfString();
+	public abstract String getString();
 }

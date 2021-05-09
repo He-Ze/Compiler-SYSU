@@ -39,7 +39,7 @@ public class Fraction extends Symbol{
 	/**
 	 * 返回带含有小数点的小数形式
 	 */
-	public String getValueOfString() {
-		return dot + integral.getValueOfString();
+	public String getString() {
+		return dot + integral.getString();
 	}	
 }

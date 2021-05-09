@@ -12,14 +12,7 @@ import java.util.ArrayList;
  */
 public class Integral extends Symbol {
 	ArrayList<Digit> integral;
-	
-	/**
-	 * 构造函数
-	 */
-	public Integral() {
-		integral = new ArrayList<Digit>();
-	}
-	
+
 	/**
 	 * 深复制构造函数
 	 * @param other integral
@@ -39,11 +32,7 @@ public class Integral extends Symbol {
 			integral.add(new Digit(str.charAt(i) + ""));
 		}
 	}
-	
-	public void addDigit(String str) {
-		integral.add(new Digit(str));
-	}
-	
+
 	public double getValue() {
 		double re = 0;
 		double j = 1;
@@ -54,10 +43,10 @@ public class Integral extends Symbol {
 		return re;
 	}
 	
-	public String getValueOfString() {
+	public String getString() {
 		String re = "";
-		for (int i = 0; i < integral.size(); i++) {
-			re += integral.get(i).getValueOfString();
+		for (Digit digit : integral) {
+			re += digit.getString();
 		}
 		return re;
 	}

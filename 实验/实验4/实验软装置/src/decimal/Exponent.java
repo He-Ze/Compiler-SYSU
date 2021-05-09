@@ -51,8 +51,8 @@ public class Exponent extends Symbol {
 	 * 用于获取exponent的字符串形式
 	 * @return exponent的字符串形式
 	 */
-	public String getValueOfString() {
-		return ex + op + integral.getValueOfString();
+	public String getString() {
+		return ex + op + integral.getString();
 	}
 	
 }

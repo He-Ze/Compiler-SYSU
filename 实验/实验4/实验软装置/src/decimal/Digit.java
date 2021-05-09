@@ -30,7 +30,7 @@ public class Digit extends Symbol {
 	  * 获取数字的值的字符串形式
 	  * @return 数字的值的字符串形式
 	  */
-	 public String getValueOfString() {
+	 public String getString() {
 		 return "" + value;
 	 }
 
