@@ -1,29 +1,20 @@
-/**
- * 
- */
 package token;
 
-import scanner.Tag;
+import parser.Scanner;
 
 /**
- * Dollar类token
- * @author Aaron-Qiu
- *
+ * The type Dollar token.
  */
 public class DollarToken extends Token {
-	/**
-	 * 构造函数
-	 */
-	public DollarToken() {
-		type = "$";
-		tag = Tag.DOLLAR;
-	}
+    /**
+     * Instantiates a new Dollar token.
+     */
+    public DollarToken() {
+        type = "$";
+        tag = Scanner.kingOfChar.DOLLAR;
+    }
 
-	/**
-	 * 返回$符号
-	 * @return $符号
-	 */
-	public String getValueofString() {
-		return type;
-	}
+    public String getString() {
+        return type;
+    }
 }

@@ -1,39 +1,37 @@
-/**
- * 
- */
 package token;
 
-import scanner.Tag;
+import parser.Scanner;
 
 /**
- * Boolean类Token
- * @author Aaron-Qiu
- *
+ * The type Boolean token.
  */
 public class BooleanToken extends Token {
-	boolean value;
-	
-	/**
-	 * @param str 用于初始化的字符串
-	 */
-	public BooleanToken(String str) {
-		type = "bool";
-		tag = Tag.BOOL;
-		value = str.equalsIgnoreCase("true");
-	}
-	
-	/**
-	 * 获取boolean型token的字符串值
-	 * @return boolean型token的字符串值
-	 */
-	public String getValueofString() {
-		return value ? "true" : "false"; 
-	}
-	
-	/**
-	 * 获取boolean型token的bool值
-	 */
-	public boolean getValue() {
-		return value;
-	}
+    /**
+     * 布尔值
+     */
+    private final boolean value;
+
+    /**
+     * 构造函数
+     *
+     * @param str 字符串
+     */
+    public BooleanToken(String str) {
+        type = "bool";
+        tag = Scanner.kingOfChar.BOOL;
+        value = str.equalsIgnoreCase("true");
+    }
+
+    public String getString() {
+        return value ? "true" : "false";
+    }
+
+    /**
+     * 获取值
+     *
+     * @return 值
+     */
+    public boolean getValue() {
+        return value;
+    }
 }

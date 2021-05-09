@@ -1,32 +1,21 @@
-/**
- * 
- */
 package token;
 
 /**
- * punctuation类token
- * @author Aaron-Qiu
- *
+ * The type Punctuation token.
  */
-public class PunctuationToken extends Token{
-	String punctuation;
+public class PunctuationToken extends Token {
+    private final String punctuation;
 
-	/**
-	 * 构造函数
-	 * @param _punctuation，标点符号
-	 * @param _tag，标点符号所属类型
-	 */
-	public PunctuationToken(String _punctuation, int _tag) {
-		tag = _tag;
-		punctuation =  _punctuation;
-	}
+    /**
+     * Instantiates a new Punctuation token.
+     */
+    public PunctuationToken(String punctuation, int tag) {
+        this.tag = tag;
+        this.punctuation = punctuation;
+    }
 
-	/**
-	 * 返回标点string形式
-	 * @return 标点的string形式
-	 */
-	public String getValueofString() {
-		return punctuation;
-	}
+    public String getString() {
+        return punctuation;
+    }
 
 }

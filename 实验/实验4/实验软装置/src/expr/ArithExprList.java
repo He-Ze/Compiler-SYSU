@@ -1,45 +1,40 @@
-/**
- * 
- */
 package expr;
 
-import scanner.Tag;
+import parser.Scanner;
 
 /**
- * ArithExprList符号类
- * @author Aaron-Qiu
- *
+ * Arithexpr列表
  */
 public class ArithExprList extends Expr {
-	/**
-	 * 用于记录当前list内的最大值最小值
-	 */
-	public double max, min;
-	
-	/**
-	 * 构造函数，对应ArithExprList -> ArithExpr
-	 * @param ae
-	 */
-	public ArithExprList(ArithExpr ae) {
-		tag = Tag.ArithExprList;
-		max = min = ae.getValue();
-	}
-	
-	/**
-	 * 构造函数，对应ArithExprList -> ArithExpr, ArithExprList
-	 * @param ae
-	 */
-	public ArithExprList(ArithExpr ae, ArithExprList ael) {
-		tag = Tag.ArithExprList;
-		double v = ae.getValue();
-		max = v > ael.max ? v : ael.max;
-		min = v < ael.min ? v : ael.min;
-	}
-	
-	/**
-	 * 用于查看当前对象是否为终结符
-	 */
-	public boolean isTerminal() {
-		return false;
-	}
+    /**
+     * 此时列表中的最大和最小值
+     */
+    public double max, min;
+
+    /**
+     * ArithExprList -> ArithExpr
+     *
+     * @param ae ArithExpr对象
+     */
+    public ArithExprList(ArithExpr ae) {
+        tag = Scanner.kingOfChar.ArithExprList;
+        max = min = ae.getValue();
+    }
+
+    /**
+     * ArithExprList -> ArithExpr , ArithExprList
+     *
+     * @param ae  ArithExpr
+     * @param ael ArithExprList
+     */
+    public ArithExprList(ArithExpr ae, ArithExprList ael) {
+        tag = Scanner.kingOfChar.ArithExprList;
+        double a = ae.getValue();
+        max = Math.max(a, ael.max);
+        min = Math.min(a, ael.min);
+    }
+
+    public boolean isTerminal() {
+        return false;
+    }
 }

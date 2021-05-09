@@ -1,118 +1,91 @@
-/**
- *
- */
-package scanner;
+package parser;
 
+import decimal.Exponent;
+import decimal.Fraction;
+import decimal.Integral;
 import exceptions.IllegalDecimalException;
 import exceptions.IllegalIdentifierException;
 import exceptions.IllegalSymbolException;
 import exceptions.LexicalException;
-import decimal.Exponent;
-import decimal.Fraction;
-import decimal.Integral;
 import token.*;
 
 /**
- * The type Scanner.
+ * 划分token
  */
 public class Scanner {
-    String input;
-    int LastTokenTag;
-    int index;
+    private final String input;
+    private int lastTokenTag;
+    private int index;
 
     /**
      * 构造函数
-     * @param _input，源表达式
+     *
+     * @param input 表达式
      */
-    public Scanner(String _input) {
-        input = _input.toLowerCase();
-        LastTokenTag = Tag.START;
+    public Scanner(String input) {
+        this.input = input.toLowerCase();
+        lastTokenTag = kingOfChar.START;
         index = 0;
     }
 
-    private boolean isEnd() {
-        return index >= input.length();
-    }
-
-    //	找到input从某个数字开始能找到的连续数字串最后一个数字
-    private int findLastDigitOfString(int start) {
-        int i = start;
-        while (Character.isDigit(input.charAt(i))) {
-            i++;
-            if (i == input.length()) break;
-        }
-        return i;
-    }
-
     /**
-     * 用于与parser交互，由parser调用，返回下一个token
-     * @return 下一个token
-     * @throws LexicalException
+     * Gets next token.
+     *
+     * @return the next token
+     * @throws LexicalException the lexical exception
      */
     public Token getNextToken() throws LexicalException {
         String head;
-        //	去除多余空格，判断是否为空, 是空返回$
         while (true) {
             if (!isEnd()) {
                 head = input.substring(index, index + 1);
                 if (!head.equals(" ")) break;
                 index++;
             } else {
-                LastTokenTag = Tag.DOLLAR;
+                lastTokenTag = kingOfChar.DOLLAR;
                 return new DollarToken();
             }
         }
-
-        //	head为数字时
         if (Character.isDigit(head.charAt(0))) {
-            //	Decimal Token DFA
             Integral integral = null;
             Fraction fraction = null;
             Exponent exponent = null;
-            //	状态1
             int i = findLastDigitOfString(index);
             String intStr = input.substring(index, i);
             integral = new Integral(intStr);
-            //	更新index位置以及head
             index = i;
             if (!isEnd()) {
                 head = input.substring(index, index + 1);
             } else {
-                LastTokenTag = Tag.NUM;
+                lastTokenTag = kingOfChar.NUM;
                 return new DecimalToken(integral);
             }
 
-            //	状态2-3
             if (head.equals(".")) {
                 index++;
                 i = findLastDigitOfString(index);
-                //	若后面无数字
                 if (i == index) {
                     throw new IllegalDecimalException();
                 }
                 intStr = input.substring(index, i);
                 fraction = new Fraction(intStr);
-                //	更新index位置以及head
                 index = i;
                 if (!isEnd()) {
                     head = input.substring(index, index + 1);
                 } else {
-                    LastTokenTag = Tag.NUM;
+                    lastTokenTag = kingOfChar.NUM;
                     return new DecimalToken(integral, fraction);
                 }
             }
 
-            //	状态4
             if (head.equalsIgnoreCase("e")) {
                 String op = "+";
                 index++;
-                //	若e后不跟任何东西
                 if (!isEnd()) {
                     head = input.substring(index, index + 1);
                 } else {
                     throw new IllegalDecimalException();
                 }
-                //	是否跳转状态5
                 if (!Character.isDigit(head.charAt(0))) {
                     if (head.equals("+") || head.equals("-")) {
                         op = head.equals("-") ? "-" : "+";
@@ -122,7 +95,6 @@ public class Scanner {
                     }
                 }
                 i = findLastDigitOfString(index);
-                //	若后面无数字
                 if (i == index) {
                     throw new IllegalDecimalException();
                 }
@@ -132,146 +104,160 @@ public class Scanner {
             }
 
             if (fraction != null && exponent != null) {
-                LastTokenTag = Tag.NUM;
+                lastTokenTag = kingOfChar.NUM;
                 return new DecimalToken(integral, fraction, exponent);
             } else {
                 if (exponent != null) {
-                    LastTokenTag = Tag.NUM;
+                    lastTokenTag = kingOfChar.NUM;
                     return new DecimalToken(integral, exponent);
                 } else if (fraction != null) {
-                    LastTokenTag = Tag.NUM;
+                    lastTokenTag = kingOfChar.NUM;
                     return new DecimalToken(integral, fraction);
                 } else {
-                    LastTokenTag = Tag.NUM;
+                    lastTokenTag = kingOfChar.NUM;
                     return new DecimalToken(integral);
                 }
             }
         } else {
-            //	head为非数字时
-            //	Boolean Token DFA
             if (head.equalsIgnoreCase("t") || head.equalsIgnoreCase("f")) {
                 if (input.substring(index, index + 4).equalsIgnoreCase("true")) {
                     index += 4;
-                    LastTokenTag = Tag.BOOL;
+                    lastTokenTag = kingOfChar.BOOL;
                     return new BooleanToken("true");
                 } else if (input.substring(index, index + 5).equalsIgnoreCase("false")) {
                     index += 5;
-                    LastTokenTag = Tag.BOOL;
+                    lastTokenTag = kingOfChar.BOOL;
                     return new BooleanToken("false");
                 } else {
                     throw new IllegalIdentifierException();
                 }
             }
 
-            //	Operator Token DFA
             if (head.equals("m") || head.equals("s") || head.equals("c")) {
-                //	处理3个预定义函数运算
-                //	若不足3个字符
                 if (index + 3 > input.length()) {
                     throw new IllegalIdentifierException();
                 }
                 String temp = input.substring(index, index + 3);
                 if (temp.equals("min") || temp.equals("max") || temp.equals("sin") || temp.equals("cos")) {
                     index += 3;
-                    LastTokenTag = Tag.FUNC;
-                    return new OperatorToken(temp, Tag.FUNC);
+                    lastTokenTag = kingOfChar.FUNC;
+                    return new OperatorToken(temp, kingOfChar.FUNC);
                 } else {
                     throw new IllegalIdentifierException();
                 }
             } else if (head.equals("-")) {
                 index++;
-                //	'-'号特殊处理
-                if (LastTokenTag == Tag.NUM || LastTokenTag == Tag.RP) {
-                    LastTokenTag = Tag.ADDSUB;
-                    return new OperatorToken("-", Tag.ADDSUB);
+                if (lastTokenTag == kingOfChar.NUM || lastTokenTag == kingOfChar.RP) {
+                    lastTokenTag = kingOfChar.ADDSUB;
+                    return new OperatorToken("-", kingOfChar.ADDSUB);
                 } else {
-                    LastTokenTag = Tag.NEG;
-                    return new OperatorToken("-", Tag.NEG);
+                    lastTokenTag = kingOfChar.NEG;
+                    return new OperatorToken("-", kingOfChar.NEG);
                 }
             } else if (head.equals("+")) {
                 index++;
-                LastTokenTag = Tag.ADDSUB;
-                return new OperatorToken("+", Tag.ADDSUB);
+                lastTokenTag = kingOfChar.ADDSUB;
+                return new OperatorToken("+", kingOfChar.ADDSUB);
             } else if (head.equals("*") || head.equals("/")) {
                 index++;
-                LastTokenTag = Tag.MULDIV;
-                return new OperatorToken(head, Tag.MULDIV);
+                lastTokenTag = kingOfChar.MULDIV;
+                return new OperatorToken(head, kingOfChar.MULDIV);
             } else if (head.equals("=") || head.equals(">") || head.equals("<")) {
                 String temp = "";
-                // 判断会不会越界
                 if (index + 2 <= input.length()) {
                     temp = input.substring(index, index + 2);
                 }
                 if (head.equals("=")) {
                     index++;
-                    LastTokenTag = Tag.RE;
-                    return new OperatorToken("=", Tag.RE);
+                    lastTokenTag = kingOfChar.RE;
+                    return new OperatorToken("=", kingOfChar.RE);
                 } else if (head.equals(">")) {
                     if (temp.equals(">=")) {
                         index += 2;
-                        LastTokenTag = Tag.RE;
-                        return new OperatorToken(">=", Tag.RE);
+                        lastTokenTag = kingOfChar.RE;
+                        return new OperatorToken(">=", kingOfChar.RE);
                     } else {
                         index++;
-                        LastTokenTag = Tag.RE;
-                        return new OperatorToken(">", Tag.RE);
+                        lastTokenTag = kingOfChar.RE;
+                        return new OperatorToken(">", kingOfChar.RE);
                     }
                 } else if (head.equals("<")) {
                     if (temp.equals("<>")) {
                         index += 2;
-                        LastTokenTag = Tag.RE;
-                        return new OperatorToken("<>", Tag.RE);
+                        lastTokenTag = kingOfChar.RE;
+                        return new OperatorToken("<>", kingOfChar.RE);
                     }
                     if (temp.equals("<=")) {
                         index += 2;
-                        LastTokenTag = Tag.RE;
-                        return new OperatorToken("<=", Tag.RE);
+                        lastTokenTag = kingOfChar.RE;
+                        return new OperatorToken("<=", kingOfChar.RE);
                     } else {
                         index++;
-                        LastTokenTag = Tag.RE;
-                        return new OperatorToken("<", Tag.RE);
+                        lastTokenTag = kingOfChar.RE;
+                        return new OperatorToken("<", kingOfChar.RE);
                     }
                 }
             } else if (head.equals("!")) {
                 index++;
-                LastTokenTag = Tag.NOT;
-                return new OperatorToken("!", Tag.NOT);
+                lastTokenTag = kingOfChar.NOT;
+                return new OperatorToken("!", kingOfChar.NOT);
             } else if (head.equals("&")) {
                 index++;
-                LastTokenTag = Tag.AND;
-                return new OperatorToken("&", Tag.AND);
+                lastTokenTag = kingOfChar.AND;
+                return new OperatorToken("&", kingOfChar.AND);
             } else if (head.equals("|")) {
                 index++;
-                LastTokenTag = Tag.OR;
-                return new OperatorToken("|", Tag.OR);
+                lastTokenTag = kingOfChar.OR;
+                return new OperatorToken("|", kingOfChar.OR);
             } else if (head.equals("?")) {
                 index++;
-                LastTokenTag = Tag.QM;
-                return new OperatorToken("?", Tag.QM);
+                lastTokenTag = kingOfChar.QM;
+                return new OperatorToken("?", kingOfChar.QM);
             } else if (head.equals(":")) {
                 index++;
-                LastTokenTag = Tag.COLON;
-                return new OperatorToken(":", Tag.COLON);
+                lastTokenTag = kingOfChar.COLON;
+                return new OperatorToken(":", kingOfChar.COLON);
             } else if (head.equals("(")) {
                 index++;
-                LastTokenTag = Tag.LP;
-                return new OperatorToken("(", Tag.LP);
+                lastTokenTag = kingOfChar.LP;
+                return new OperatorToken("(", kingOfChar.LP);
             } else if (head.equals(")")) {
                 index++;
-                LastTokenTag = Tag.RP;
-                return new OperatorToken(")", Tag.RP);
+                lastTokenTag = kingOfChar.RP;
+                return new OperatorToken(")", kingOfChar.RP);
             } else if (head.equals(",")) {
                 index++;
-                LastTokenTag = Tag.COMMA;
-                return new PunctuationToken(",", Tag.COMMA);
+                lastTokenTag = kingOfChar.COMMA;
+                return new PunctuationToken(",", kingOfChar.COMMA);
             } else if (head.equals("^")) {
                 index++;
-                LastTokenTag = Tag.POWER;
-                return new OperatorToken("^", Tag.POWER);
+                lastTokenTag = kingOfChar.POWER;
+                return new OperatorToken("^", kingOfChar.POWER);
             } else {
                 throw new IllegalSymbolException();
             }
         }
         return new DollarToken();
+    }
+
+    private boolean isEnd() {
+        return index >= input.length();
+    }
+
+    private int findLastDigitOfString(int start) {
+        int i = start;
+        while (Character.isDigit(input.charAt(i))) {
+            i++;
+            if (i == input.length())
+                break;
+        }
+        return i;
+    }
+
+    public static class kingOfChar {
+        public final static int NUM = 0, BOOL = 1, ADDSUB = 2, MULDIV = 3, NEG = 4, POWER = 5, FUNC = 6,
+                LP = 7, COMMA = 8, RP = 9, RE = 10, NOT = 11, AND = 12, OR = 13, QM = 14, COLON = 15, DOLLAR = 16;
+        public final static int Expr = 17, ArithExpr = 18, BoolExpr = 19, ArithExprList = 20;
+        public final static int START = 21, NULL = 22;
     }
 }

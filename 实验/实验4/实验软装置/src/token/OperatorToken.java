@@ -1,31 +1,21 @@
-/**
- * 
- */
 package token;
 
 /**
- * Operator类型的token，包含左右括号
- * @author Aaron-Qiu
- *
+ * The type Operator token.
  */
 public class OperatorToken extends Token {
-	String operator;
-	
-	/**
-	 * 构造函数
-	 * @param _operator, 运算符
-	 * @param _tag，运算符所属的tag
-	 */
-	public OperatorToken(String _operator, int _tag) {
-		type = "Operator";
-		operator = _operator;
-		tag = _tag;
-	}
-	
-	/**
-	 * @return operator的string形式
-	 */
-	public String getValueofString() {
-		return operator;
-	}
+    private final String operator;
+
+    /**
+     * Instantiates a new Operator token.
+     */
+    public OperatorToken(String operator, int tag) {
+        type = "Operator";
+        this.operator = operator;
+        this.tag = tag;
+    }
+
+    public String getString() {
+        return operator;
+    }
 }

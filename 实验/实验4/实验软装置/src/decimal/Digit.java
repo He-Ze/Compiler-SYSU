@@ -1,37 +1,34 @@
-/**
- * 
- */
-package symbol;
+package decimal;
 
 /**
- * 这个类用于表示一个0到9数字
- * @author Aaron-Qiu
- *
+ * digit->0|1|2|3|4|5|6|7|8|9
  */
-public class Digit extends Symbol {
-	 int value;
-	 /**
-	  * 构造函数
-	  * @param str 用于初始化数字的字符串
-	  */
-	 public Digit(String str) {
-		 value = Integer.parseInt(str);
-	 }
-	 
-	 /**
-	  * 获取数字的值
-	  * @return 数字的值
-	  */
-	 public int getValue() {
-		 return value;
-	 }
-	 
-	 /**
-	  * 获取数字的值的字符串形式
-	  * @return 数字的值的字符串形式
-	  */
-	 public String getString() {
-		 return "" + value;
-	 }
+public class Digit extends Decimal {
+    /**
+     * 数字值
+     */
+    private final int value;
+
+    /**
+     * 构造函数
+     *
+     * @param str 数字的字符串
+     */
+    public Digit(String str) {
+        value = Integer.parseInt(str);
+    }
+
+    /**
+     * 获取值
+     *
+     * @return 值
+     */
+    public int getValue() {
+        return value;
+    }
+
+    public String getString() {
+        return String.valueOf(value);
+    }
 
 }
