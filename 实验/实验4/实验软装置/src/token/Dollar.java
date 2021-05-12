@@ -5,13 +5,13 @@ import parser.Scanner;
 /**
  * The type Dollar token.
  */
-public class DollarToken extends Token {
+public class Dollar extends Token {
     /**
      * Instantiates a new Dollar token.
      */
-    public DollarToken() {
+    public Dollar() {
         type = "$";
-        tag = Scanner.kingOfChar.DOLLAR;
+        tag = Scanner.kindOfChar.DOLLAR;
     }
 
     public String getString() {

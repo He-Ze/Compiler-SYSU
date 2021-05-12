@@ -8,7 +8,7 @@ import parser.Scanner;
 /**
  * The type Decimal token.
  */
-public class DecimalToken extends Token {
+public class Decimal extends Token {
     Integral integral;
     Fraction fraction;
     Exponent exponent;
@@ -16,9 +16,9 @@ public class DecimalToken extends Token {
     /**
      * 构造函数1
      */
-    public DecimalToken(Integral i, Fraction f, Exponent e) {
+    public Decimal(Integral i, Fraction f, Exponent e) {
         type = "Decimal";
-        tag = Scanner.kingOfChar.NUM;
+        tag = Scanner.kindOfChar.NUM;
         integral = new Integral(i);
         fraction = new Fraction(f);
         exponent = new Exponent(e);
@@ -27,9 +27,9 @@ public class DecimalToken extends Token {
     /**
      * 构造函数2
      */
-    public DecimalToken(Integral i, Exponent e) {
+    public Decimal(Integral i, Exponent e) {
         type = "Decimal";
-        tag = Scanner.kingOfChar.NUM;
+        tag = Scanner.kindOfChar.NUM;
         integral = new Integral(i);
         fraction = null;
         exponent = new Exponent(e);
@@ -38,9 +38,9 @@ public class DecimalToken extends Token {
     /**
      * 构造函数3
      */
-    public DecimalToken(Integral i, Fraction f) {
+    public Decimal(Integral i, Fraction f) {
         type = "Decimal";
-        tag = Scanner.kingOfChar.NUM;
+        tag = Scanner.kindOfChar.NUM;
         integral = new Integral(i);
         fraction = new Fraction(f);
         exponent = null;
@@ -49,9 +49,9 @@ public class DecimalToken extends Token {
     /**
      * 构造函数4
      */
-    public DecimalToken(Integral i) {
+    public Decimal(Integral i) {
         type = "Decimal";
-        tag = Scanner.kingOfChar.NUM;
+        tag = Scanner.kindOfChar.NUM;
         integral = new Integral(i);
         fraction = null;
         exponent = null;

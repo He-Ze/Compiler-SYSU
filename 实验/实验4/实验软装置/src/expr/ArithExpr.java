@@ -1,7 +1,7 @@
 package expr;
 
 import parser.Scanner;
-import token.DecimalToken;
+import token.Decimal;
 
 /**
  * The type Arith expr.
@@ -9,15 +9,15 @@ import token.DecimalToken;
 public class ArithExpr extends Expr {
     private final double value;
 
-    public ArithExpr(DecimalToken t) {
+    public ArithExpr(Decimal t) {
         super(t);
-        tag = Scanner.kingOfChar.ArithExpr;
+        tag = Scanner.kindOfChar.ArithExpr;
         value = t.getValue();
     }
 
     public ArithExpr(double v) {
         super(null);
-        tag = Scanner.kingOfChar.ArithExpr;
+        tag = Scanner.kindOfChar.ArithExpr;
         value = v;
     }
 

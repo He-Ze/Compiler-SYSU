@@ -5,7 +5,7 @@ import expr.ArithExpr;
 import expr.BoolExpr;
 import expr.Expr;
 import expr.Terminal;
-import token.DollarToken;
+import token.Dollar;
 
 import java.util.ArrayList;
 
@@ -30,11 +30,12 @@ public class Parser {
         scanner = new Scanner(input);
         reducer = new Reducer();
         stack = new ArrayList<>();
-        stack.add(new Terminal(new DollarToken()));
+        stack.add(new Terminal(new Dollar()));
     }
 
     /**
      * 被calculator调用的进行parse动作的函数
+     * 值为0代表shift，1为reduce，2为accept，其余为各种错误
      *
      * @return 计算结果
      * @throws ExpressionException 错误集合
@@ -110,7 +111,7 @@ public class Parser {
 
     private double accept() throws TypeMismatchedException {
         Expr k = stack.get(stack.size() - 1);
-        if (k.getTag() == Scanner.kingOfChar.BoolExpr) {
+        if (k.getTag() == Scanner.kindOfChar.BoolExpr) {
             System.out.println(((BoolExpr) k).getValue());
             throw new TypeMismatchedException();
         }
@@ -120,38 +121,38 @@ public class Parser {
     private void reduce() throws ExpressionException {
         Terminal topMostTerminal = getTopMostTerminal();
         switch (topMostTerminal.getTag()) {
-            case Scanner.kingOfChar.NUM:
+            case Scanner.kindOfChar.NUM:
                 reducer.numReducer(stack);
                 break;
-            case Scanner.kingOfChar.BOOL:
+            case Scanner.kindOfChar.BOOL:
                 reducer.boolReducer(stack);
                 break;
-            case Scanner.kingOfChar.ADDSUB:
+            case Scanner.kindOfChar.ADDSUB:
                 reducer.add_subReducer(stack);
                 break;
-            case Scanner.kingOfChar.MULDIV:
+            case Scanner.kindOfChar.MULDIV:
                 reducer.mul_divReducer(stack);
                 break;
-            case Scanner.kingOfChar.NOT:
+            case Scanner.kindOfChar.NOT:
                 reducer.notReducer(stack);
                 break;
-            case Scanner.kingOfChar.NEG:
+            case Scanner.kindOfChar.NEG:
                 reducer.negReducer(stack);
                 break;
-            case Scanner.kingOfChar.POWER:
+            case Scanner.kindOfChar.POWER:
                 reducer.powReducer(stack);
                 break;
-            case Scanner.kingOfChar.AND:
-            case Scanner.kingOfChar.OR:
+            case Scanner.kindOfChar.AND:
+            case Scanner.kindOfChar.OR:
                 reducer.and_orReducer(stack);
                 break;
-            case Scanner.kingOfChar.RE:
-                reducer.reReducer(stack);
+            case Scanner.kindOfChar.RE:
+                reducer.relationReducer(stack);
                 break;
-            case Scanner.kingOfChar.COLON:
+            case Scanner.kindOfChar.COLON:
                 reducer.colonReducer(stack);
                 break;
-            case Scanner.kingOfChar.RP:
+            case Scanner.kindOfChar.RP:
                 reducer.rpReducer(stack);
                 break;
             default:

@@ -1,7 +1,7 @@
 package expr;
 
 import parser.Scanner;
-import token.BooleanToken;
+import token.Boolean;
 
 /**
  * The type Bool expr.
@@ -14,9 +14,9 @@ public class BoolExpr extends Expr {
      *
      * @param t BooleanToken
      */
-    public BoolExpr(BooleanToken t) {
+    public BoolExpr(Boolean t) {
         super(t);
-        tag = Scanner.kingOfChar.BoolExpr;
+        tag = Scanner.kindOfChar.BoolExpr;
         value = t.getValue();
     }
 
@@ -27,7 +27,7 @@ public class BoolExpr extends Expr {
      */
     public BoolExpr(boolean v) {
         super(null);
-        tag = Scanner.kingOfChar.BoolExpr;
+        tag = Scanner.kindOfChar.BoolExpr;
         value = v;
     }
 

@@ -17,7 +17,7 @@ public class ArithExprList extends Expr {
      * @param ae ArithExpr对象
      */
     public ArithExprList(ArithExpr ae) {
-        tag = Scanner.kingOfChar.ArithExprList;
+        tag = Scanner.kindOfChar.ArithExprList;
         max = min = ae.getValue();
     }
 
@@ -28,7 +28,7 @@ public class ArithExprList extends Expr {
      * @param ael ArithExprList
      */
     public ArithExprList(ArithExpr ae, ArithExprList ael) {
-        tag = Scanner.kingOfChar.ArithExprList;
+        tag = Scanner.kindOfChar.ArithExprList;
         double a = ae.getValue();
         max = Math.max(a, ael.max);
         min = Math.min(a, ael.min);

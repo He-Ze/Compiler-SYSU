@@ -2,8 +2,8 @@ package parser;
 
 import exceptions.*;
 import expr.*;
-import token.BooleanToken;
-import token.DecimalToken;
+import token.Boolean;
+import token.Decimal;
 
 import java.util.ArrayList;
 
@@ -19,9 +19,23 @@ public class Reducer {
     public void numReducer(ArrayList<Expr> stack) {
         int i = stack.size() - 1;
         Terminal k = (Terminal) stack.get(i);
-        ArithExpr arithExpr = new ArithExpr((DecimalToken) k.token);
+        ArithExpr arithExpr = new ArithExpr((Decimal) k.token);
         stack.remove(i);
         stack.add(arithExpr);
+    }
+
+    /**
+     * Bool reducer.
+     *
+     * @param stack 用于存放token的栈
+     * @throws ExpressionException the expression exception
+     */
+    public void boolReducer(ArrayList<Expr> stack) throws ExpressionException {
+        int i = stack.size() - 1;
+        Terminal t = (Terminal) stack.get(i);
+        BoolExpr b = new BoolExpr((Boolean) t.token);
+        stack.remove(i);
+        stack.add(b);
     }
 
     /**
@@ -33,13 +47,30 @@ public class Reducer {
     public void negReducer(ArrayList<Expr> stack) throws ExpressionException {
         int i = stack.size() - 1;
         Expr k = stack.get(i);
-        if (k.getTag() != Scanner.kingOfChar.ArithExpr)
+        if (k.getTag() != Scanner.kindOfChar.ArithExpr)
             throw new TypeMismatchedException();
-        double v = ((DecimalToken) k.token).getValue();
+        double v = ((Decimal) k.token).getValue();
         ArithExpr arithExpr = new ArithExpr(-v);
         stack.remove(i);
         stack.remove(i - 1);
         stack.add(arithExpr);
+    }
+
+    /**
+     * Not reducer.
+     *
+     * @param stack 用于存放token的栈
+     * @throws ExpressionException the expression exception
+     */
+    public void notReducer(ArrayList<Expr> stack) throws ExpressionException {
+        int i = stack.size() - 1;
+        Expr a = stack.get(i);
+        if (a.getTag() != Scanner.kindOfChar.BoolExpr)
+            throw new TypeMismatchedException();
+        BoolExpr be = new BoolExpr(!((BoolExpr) a).getValue());
+        stack.remove(i);
+        stack.remove(i - 1);
+        stack.add(be);
     }
 
     /**
@@ -53,11 +84,11 @@ public class Reducer {
         Expr a = stack.get(i - 2);
         Expr o = stack.get(i - 1);
         Expr b = stack.get(i);
-        if ((b.tag == Scanner.kingOfChar.ADDSUB))
+        if ((b.tag == Scanner.kindOfChar.ADDSUB))
             throw new MissingOperandException();
-        if (a.getTag() == Scanner.kingOfChar.BoolExpr)
+        if (a.getTag() == Scanner.kindOfChar.BoolExpr)
             throw new TypeMismatchedException();
-        else if (a.getTag() != Scanner.kingOfChar.ArithExpr)
+        else if (a.getTag() != Scanner.kindOfChar.ArithExpr)
             throw new MissingOperandException();
         ArithExpr arithExpr;
         if (o.token.getString().equals("+"))
@@ -81,12 +112,12 @@ public class Reducer {
         Expr a = stack.get(i - 2);
         Expr o = stack.get(i - 1);
         Expr b = stack.get(i);
-        if ((b.getTag() == Scanner.kingOfChar.AND) || (b.getTag() == Scanner.kingOfChar.OR))
+        if ((b.getTag() == Scanner.kindOfChar.AND) || (b.getTag() == Scanner.kindOfChar.OR))
             throw new MissingOperandException();
-        if (a.getTag() != Scanner.kingOfChar.BoolExpr || b.getTag() != Scanner.kingOfChar.BoolExpr)
+        if (a.getTag() != Scanner.kindOfChar.BoolExpr || b.getTag() != Scanner.kindOfChar.BoolExpr)
             throw new TypeMismatchedException();
         BoolExpr be;
-        if (o.getTag() == Scanner.kingOfChar.AND)
+        if (o.getTag() == Scanner.kindOfChar.AND)
             be = new BoolExpr(((BoolExpr) a).getValue() && ((BoolExpr) b).getValue());
         else
             be = new BoolExpr(((BoolExpr) a).getValue() || ((BoolExpr) b).getValue());
@@ -94,51 +125,6 @@ public class Reducer {
         stack.remove(i - 1);
         stack.remove(i - 2);
         stack.add(be);
-    }
-
-    /**
-     * Bool reducer.
-     *
-     * @param stack 用于存放token的栈
-     * @throws ExpressionException the expression exception
-     */
-    public void boolReducer(ArrayList<Expr> stack) throws ExpressionException {
-        int i = stack.size() - 1;
-        Terminal t = (Terminal) stack.get(i);
-        BoolExpr b = new BoolExpr((BooleanToken) t.token);
-        stack.remove(i);
-        stack.add(b);
-    }
-
-    /**
-     * Colon reducer.
-     *
-     * @param stack 用于存放token的栈
-     * @throws ExpressionException the expression exception
-     */
-    public void colonReducer(ArrayList<Expr> stack) throws ExpressionException {
-        int i = stack.size() - 1;
-        Expr a = stack.get(i);
-        Expr b = stack.get(i - 1);
-        Expr c = stack.get(i - 2);
-        Expr d = stack.get(i - 3);
-        Expr e = stack.get(i - 4);
-
-        if (a.getTag() != Scanner.kingOfChar.ArithExpr || c.getTag() != Scanner.kingOfChar.ArithExpr || e.getTag() != Scanner.kingOfChar.BoolExpr)
-            throw new TypeMismatchedException();
-        if (d.getTag() != Scanner.kingOfChar.QM)
-            throw new exceptions.TrinaryOperationException();
-        if (((BoolExpr) e).getValue()) {
-            stack.remove(i);
-            stack.remove(i - 1);
-            stack.remove(i - 3);
-            stack.remove(i - 4);
-        } else {
-            stack.remove(i - 1);
-            stack.remove(i - 2);
-            stack.remove(i - 3);
-            stack.remove(i - 4);
-        }
     }
 
     /**
@@ -152,9 +138,9 @@ public class Reducer {
         Expr a = stack.get(i - 2);
         Expr o = stack.get(i - 1);
         Expr b = stack.get(i);
-        if ((b.getTag() == Scanner.kingOfChar.MULDIV))
+        if ((b.getTag() == Scanner.kindOfChar.MULDIV))
             throw new MissingOperandException();
-        if (a.getTag() != Scanner.kingOfChar.ArithExpr || b.getTag() != Scanner.kingOfChar.ArithExpr)
+        if (a.getTag() != Scanner.kindOfChar.ArithExpr || b.getTag() != Scanner.kindOfChar.ArithExpr)
             throw new TypeMismatchedException();
         ArithExpr ae;
         if (o.token.getString().equals("*"))
@@ -170,20 +156,32 @@ public class Reducer {
     }
 
     /**
-     * Not reducer.
+     * Colon reducer.
      *
      * @param stack 用于存放token的栈
      * @throws ExpressionException the expression exception
      */
-    public void notReducer(ArrayList<Expr> stack) throws ExpressionException {
+    public void colonReducer(ArrayList<Expr> stack) throws ExpressionException {
         int i = stack.size() - 1;
         Expr a = stack.get(i);
-        if (a.getTag() != Scanner.kingOfChar.BoolExpr)
+        Expr b = stack.get(i - 2);
+        Expr c = stack.get(i - 3);
+        Expr d = stack.get(i - 4);
+        if (a.getTag() != Scanner.kindOfChar.ArithExpr || b.getTag() != Scanner.kindOfChar.ArithExpr || d.getTag() != Scanner.kindOfChar.BoolExpr)
             throw new TypeMismatchedException();
-        BoolExpr be = new BoolExpr(!((BoolExpr) a).getValue());
-        stack.remove(i);
-        stack.remove(i - 1);
-        stack.add(be);
+        if (c.getTag() != Scanner.kindOfChar.QM)
+            throw new exceptions.TrinaryOperationException();
+        if (((BoolExpr) d).getValue()) {
+            stack.remove(i);
+            stack.remove(i - 1);
+            stack.remove(i - 3);
+            stack.remove(i - 4);
+        } else {
+            stack.remove(i - 1);
+            stack.remove(i - 2);
+            stack.remove(i - 3);
+            stack.remove(i - 4);
+        }
     }
 
     /**
@@ -197,9 +195,9 @@ public class Reducer {
         Expr a = stack.get(i - 2);
         Expr o = stack.get(i - 1);
         Expr b = stack.get(i);
-        if ((b.getTag() == Scanner.kingOfChar.POWER))
+        if ((b.getTag() == Scanner.kindOfChar.POWER))
             throw new MissingOperandException();
-        if (a.getTag() != Scanner.kingOfChar.ArithExpr || b.getTag() != Scanner.kingOfChar.ArithExpr)
+        if (a.getTag() != Scanner.kindOfChar.ArithExpr || b.getTag() != Scanner.kindOfChar.ArithExpr)
             throw new TypeMismatchedException();
         ArithExpr ae;
         ae = new ArithExpr(Math.pow(((ArithExpr) a).getValue(), ((ArithExpr) b).getValue()));
@@ -210,19 +208,19 @@ public class Reducer {
     }
 
     /**
-     * Re reducer.
+     * Relation reducer.
      *
      * @param stack 用于存放token的栈
      * @throws ExpressionException the expression exception
      */
-    public void reReducer(ArrayList<Expr> stack) throws ExpressionException {
+    public void relationReducer(ArrayList<Expr> stack) throws ExpressionException {
         int i = stack.size() - 1;
         Expr a = stack.get(i - 2);
         Expr o = stack.get(i - 1);
         Expr b = stack.get(i);
-        if (b.getTag() == Scanner.kingOfChar.RE)
+        if (b.getTag() == Scanner.kindOfChar.RE)
             throw new MissingOperandException();
-        if (a.getTag() != Scanner.kingOfChar.ArithExpr || b.getTag() != Scanner.kingOfChar.ArithExpr)
+        if (a.getTag() != Scanner.kindOfChar.ArithExpr || b.getTag() != Scanner.kindOfChar.ArithExpr)
             throw new TypeMismatchedException();
         BoolExpr be = null;
         switch (o.token.getString()) {
@@ -262,20 +260,20 @@ public class Reducer {
         Expr o = stack.get(i - 1);
         Expr b = stack.get(i - 2);
         Expr c = stack.get(i - 3);
-        if (o.getTag() == Scanner.kingOfChar.RE || o.getTag() == Scanner.kingOfChar.COMMA)
+        if (o.getTag() == Scanner.kindOfChar.RE || o.getTag() == Scanner.kindOfChar.COMMA)
             throw new MissingOperandException();
-        else if (o.getTag() == Scanner.kingOfChar.BoolExpr) {
+        else if (o.getTag() == Scanner.kindOfChar.BoolExpr) {
             stack.remove(i);
             stack.remove(i - 2);
             return;
-        } else if (o.getTag() == Scanner.kingOfChar.ArithExprList) {
-            if (c.getTag() != Scanner.kingOfChar.ArithExpr)
+        } else if (o.getTag() == Scanner.kindOfChar.ArithExprList) {
+            if (c.getTag() != Scanner.kindOfChar.ArithExpr)
                 throw new TypeMismatchedException();
             ArithExprList ael = new ArithExprList((ArithExpr) c, (ArithExprList) o);
             Expr d = stack.get(i - 4);
             Expr f = stack.get(i - 5);
             ArithExpr ae = null;
-            if (d.getTag() == Scanner.kingOfChar.LP && f.getTag() == Scanner.kingOfChar.FUNC) {
+            if (d.getTag() == Scanner.kindOfChar.LP && f.getTag() == Scanner.kindOfChar.FUNC) {
                 switch (f.token.getString()) {
                     case "max":
                         ae = new ArithExpr(ael.max);
@@ -299,13 +297,13 @@ public class Reducer {
                 stack.set(i - 3, ael);
             }
             return;
-        } else if (o.getTag() == Scanner.kingOfChar.ArithExpr) {
-            if (b.getTag() == Scanner.kingOfChar.COMMA) {
+        } else if (o.getTag() == Scanner.kindOfChar.ArithExpr) {
+            if (b.getTag() == Scanner.kindOfChar.COMMA) {
                 ArithExprList ael = new ArithExprList((ArithExpr) o);
                 stack.set(i - 1, ael);
                 return;
-            } else if (c.getTag() == Scanner.kingOfChar.FUNC) {
-                if (o.getTag() != Scanner.kingOfChar.ArithExpr)
+            } else if (c.getTag() == Scanner.kindOfChar.FUNC) {
+                if (o.getTag() != Scanner.kindOfChar.ArithExpr)
                     throw new TypeMismatchedException();
                 ArithExpr ae;
                 switch (c.token.getString()) {

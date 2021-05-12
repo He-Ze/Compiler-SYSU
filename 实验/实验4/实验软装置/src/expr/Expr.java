@@ -18,7 +18,7 @@ public abstract class Expr {
      */
     public Expr(Token t) {
         token = t;
-        tag = Scanner.kingOfChar.Expr;
+        tag = Scanner.kindOfChar.Expr;
     }
 
     /**
@@ -26,7 +26,7 @@ public abstract class Expr {
      */
     public Expr() {
         token = null;
-        tag = Scanner.kingOfChar.NULL;
+        tag = Scanner.kindOfChar.NULL;
     }
 
     /**

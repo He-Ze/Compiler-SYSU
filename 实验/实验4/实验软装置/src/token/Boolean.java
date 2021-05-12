@@ -5,7 +5,7 @@ import parser.Scanner;
 /**
  * The type Boolean token.
  */
-public class BooleanToken extends Token {
+public class Boolean extends Token {
     /**
      * 布尔值
      */
@@ -16,9 +16,9 @@ public class BooleanToken extends Token {
      *
      * @param str 字符串
      */
-    public BooleanToken(String str) {
+    public Boolean(String str) {
         type = "bool";
-        tag = Scanner.kingOfChar.BOOL;
+        tag = Scanner.kindOfChar.BOOL;
         value = str.equalsIgnoreCase("true");
     }
 

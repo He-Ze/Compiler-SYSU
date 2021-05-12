@@ -8,6 +8,7 @@ import exceptions.IllegalIdentifierException;
 import exceptions.IllegalSymbolException;
 import exceptions.LexicalException;
 import token.*;
+import token.Boolean;
 
 /**
  * 划分token
@@ -24,7 +25,7 @@ public class Scanner {
      */
     public Scanner(String input) {
         this.input = input.toLowerCase();
-        lastTokenTag = kingOfChar.START;
+        lastTokenTag = kindOfChar.START;
         index = 0;
     }
 
@@ -42,8 +43,8 @@ public class Scanner {
                 if (!head.equals(" ")) break;
                 index++;
             } else {
-                lastTokenTag = kingOfChar.DOLLAR;
-                return new DollarToken();
+                lastTokenTag = kindOfChar.DOLLAR;
+                return new Dollar();
             }
         }
         if (Character.isDigit(head.charAt(0))) {
@@ -57,8 +58,8 @@ public class Scanner {
             if (!isEnd()) {
                 head = input.substring(index, index + 1);
             } else {
-                lastTokenTag = kingOfChar.NUM;
-                return new DecimalToken(integral);
+                lastTokenTag = kindOfChar.NUM;
+                return new Decimal(integral);
             }
 
             if (head.equals(".")) {
@@ -73,8 +74,8 @@ public class Scanner {
                 if (!isEnd()) {
                     head = input.substring(index, index + 1);
                 } else {
-                    lastTokenTag = kingOfChar.NUM;
-                    return new DecimalToken(integral, fraction);
+                    lastTokenTag = kindOfChar.NUM;
+                    return new Decimal(integral, fraction);
                 }
             }
 
@@ -104,30 +105,30 @@ public class Scanner {
             }
 
             if (fraction != null && exponent != null) {
-                lastTokenTag = kingOfChar.NUM;
-                return new DecimalToken(integral, fraction, exponent);
+                lastTokenTag = kindOfChar.NUM;
+                return new Decimal(integral, fraction, exponent);
             } else {
                 if (exponent != null) {
-                    lastTokenTag = kingOfChar.NUM;
-                    return new DecimalToken(integral, exponent);
+                    lastTokenTag = kindOfChar.NUM;
+                    return new Decimal(integral, exponent);
                 } else if (fraction != null) {
-                    lastTokenTag = kingOfChar.NUM;
-                    return new DecimalToken(integral, fraction);
+                    lastTokenTag = kindOfChar.NUM;
+                    return new Decimal(integral, fraction);
                 } else {
-                    lastTokenTag = kingOfChar.NUM;
-                    return new DecimalToken(integral);
+                    lastTokenTag = kindOfChar.NUM;
+                    return new Decimal(integral);
                 }
             }
         } else {
             if (head.equalsIgnoreCase("t") || head.equalsIgnoreCase("f")) {
                 if (input.substring(index, index + 4).equalsIgnoreCase("true")) {
                     index += 4;
-                    lastTokenTag = kingOfChar.BOOL;
-                    return new BooleanToken("true");
+                    lastTokenTag = kindOfChar.BOOL;
+                    return new Boolean("true");
                 } else if (input.substring(index, index + 5).equalsIgnoreCase("false")) {
                     index += 5;
-                    lastTokenTag = kingOfChar.BOOL;
-                    return new BooleanToken("false");
+                    lastTokenTag = kindOfChar.BOOL;
+                    return new Boolean("false");
                 } else {
                     throw new IllegalIdentifierException();
                 }
@@ -140,28 +141,28 @@ public class Scanner {
                 String temp = input.substring(index, index + 3);
                 if (temp.equals("min") || temp.equals("max") || temp.equals("sin") || temp.equals("cos")) {
                     index += 3;
-                    lastTokenTag = kingOfChar.FUNC;
-                    return new OperatorToken(temp, kingOfChar.FUNC);
+                    lastTokenTag = kindOfChar.FUNC;
+                    return new Operator(temp, kindOfChar.FUNC);
                 } else {
                     throw new IllegalIdentifierException();
                 }
             } else if (head.equals("-")) {
                 index++;
-                if (lastTokenTag == kingOfChar.NUM || lastTokenTag == kingOfChar.RP) {
-                    lastTokenTag = kingOfChar.ADDSUB;
-                    return new OperatorToken("-", kingOfChar.ADDSUB);
+                if (lastTokenTag == kindOfChar.NUM || lastTokenTag == kindOfChar.RP) {
+                    lastTokenTag = kindOfChar.ADDSUB;
+                    return new Operator("-", kindOfChar.ADDSUB);
                 } else {
-                    lastTokenTag = kingOfChar.NEG;
-                    return new OperatorToken("-", kingOfChar.NEG);
+                    lastTokenTag = kindOfChar.NEG;
+                    return new Operator("-", kindOfChar.NEG);
                 }
             } else if (head.equals("+")) {
                 index++;
-                lastTokenTag = kingOfChar.ADDSUB;
-                return new OperatorToken("+", kingOfChar.ADDSUB);
+                lastTokenTag = kindOfChar.ADDSUB;
+                return new Operator("+", kindOfChar.ADDSUB);
             } else if (head.equals("*") || head.equals("/")) {
                 index++;
-                lastTokenTag = kingOfChar.MULDIV;
-                return new OperatorToken(head, kingOfChar.MULDIV);
+                lastTokenTag = kindOfChar.MULDIV;
+                return new Operator(head, kindOfChar.MULDIV);
             } else if (head.equals("=") || head.equals(">") || head.equals("<")) {
                 String temp = "";
                 if (index + 2 <= input.length()) {
@@ -169,75 +170,75 @@ public class Scanner {
                 }
                 if (head.equals("=")) {
                     index++;
-                    lastTokenTag = kingOfChar.RE;
-                    return new OperatorToken("=", kingOfChar.RE);
+                    lastTokenTag = kindOfChar.RE;
+                    return new Operator("=", kindOfChar.RE);
                 } else if (head.equals(">")) {
                     if (temp.equals(">=")) {
                         index += 2;
-                        lastTokenTag = kingOfChar.RE;
-                        return new OperatorToken(">=", kingOfChar.RE);
+                        lastTokenTag = kindOfChar.RE;
+                        return new Operator(">=", kindOfChar.RE);
                     } else {
                         index++;
-                        lastTokenTag = kingOfChar.RE;
-                        return new OperatorToken(">", kingOfChar.RE);
+                        lastTokenTag = kindOfChar.RE;
+                        return new Operator(">", kindOfChar.RE);
                     }
                 } else if (head.equals("<")) {
                     if (temp.equals("<>")) {
                         index += 2;
-                        lastTokenTag = kingOfChar.RE;
-                        return new OperatorToken("<>", kingOfChar.RE);
+                        lastTokenTag = kindOfChar.RE;
+                        return new Operator("<>", kindOfChar.RE);
                     }
                     if (temp.equals("<=")) {
                         index += 2;
-                        lastTokenTag = kingOfChar.RE;
-                        return new OperatorToken("<=", kingOfChar.RE);
+                        lastTokenTag = kindOfChar.RE;
+                        return new Operator("<=", kindOfChar.RE);
                     } else {
                         index++;
-                        lastTokenTag = kingOfChar.RE;
-                        return new OperatorToken("<", kingOfChar.RE);
+                        lastTokenTag = kindOfChar.RE;
+                        return new Operator("<", kindOfChar.RE);
                     }
                 }
             } else if (head.equals("!")) {
                 index++;
-                lastTokenTag = kingOfChar.NOT;
-                return new OperatorToken("!", kingOfChar.NOT);
+                lastTokenTag = kindOfChar.NOT;
+                return new Operator("!", kindOfChar.NOT);
             } else if (head.equals("&")) {
                 index++;
-                lastTokenTag = kingOfChar.AND;
-                return new OperatorToken("&", kingOfChar.AND);
+                lastTokenTag = kindOfChar.AND;
+                return new Operator("&", kindOfChar.AND);
             } else if (head.equals("|")) {
                 index++;
-                lastTokenTag = kingOfChar.OR;
-                return new OperatorToken("|", kingOfChar.OR);
+                lastTokenTag = kindOfChar.OR;
+                return new Operator("|", kindOfChar.OR);
             } else if (head.equals("?")) {
                 index++;
-                lastTokenTag = kingOfChar.QM;
-                return new OperatorToken("?", kingOfChar.QM);
+                lastTokenTag = kindOfChar.QM;
+                return new Operator("?", kindOfChar.QM);
             } else if (head.equals(":")) {
                 index++;
-                lastTokenTag = kingOfChar.COLON;
-                return new OperatorToken(":", kingOfChar.COLON);
+                lastTokenTag = kindOfChar.COLON;
+                return new Operator(":", kindOfChar.COLON);
             } else if (head.equals("(")) {
                 index++;
-                lastTokenTag = kingOfChar.LP;
-                return new OperatorToken("(", kingOfChar.LP);
+                lastTokenTag = kindOfChar.LP;
+                return new Operator("(", kindOfChar.LP);
             } else if (head.equals(")")) {
                 index++;
-                lastTokenTag = kingOfChar.RP;
-                return new OperatorToken(")", kingOfChar.RP);
+                lastTokenTag = kindOfChar.RP;
+                return new Operator(")", kindOfChar.RP);
             } else if (head.equals(",")) {
                 index++;
-                lastTokenTag = kingOfChar.COMMA;
-                return new PunctuationToken(",", kingOfChar.COMMA);
+                lastTokenTag = kindOfChar.COMMA;
+                return new Punctuation(",", kindOfChar.COMMA);
             } else if (head.equals("^")) {
                 index++;
-                lastTokenTag = kingOfChar.POWER;
-                return new OperatorToken("^", kingOfChar.POWER);
+                lastTokenTag = kindOfChar.POWER;
+                return new Operator("^", kindOfChar.POWER);
             } else {
                 throw new IllegalSymbolException();
             }
         }
-        return new DollarToken();
+        return new Dollar();
     }
 
     private boolean isEnd() {
@@ -254,7 +255,7 @@ public class Scanner {
         return i;
     }
 
-    public static class kingOfChar {
+    public static class kindOfChar {
         public final static int NUM = 0, BOOL = 1, ADDSUB = 2, MULDIV = 3, NEG = 4, POWER = 5, FUNC = 6,
                 LP = 7, COMMA = 8, RP = 9, RE = 10, NOT = 11, AND = 12, OR = 13, QM = 14, COLON = 15, DOLLAR = 16;
         public final static int Expr = 17, ArithExpr = 18, BoolExpr = 19, ArithExprList = 20;
