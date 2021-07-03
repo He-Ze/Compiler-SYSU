@@ -1,0 +1,35 @@
+Module calculate;
+	(*计算阶乘*)
+	PROCEDURE Factorial;
+	VAR n, res: INTEGER;
+	BEGIN
+		Read(n);
+		res := 1;
+		IF n = 0 THEN res := 0 END;
+		WHILE n > 1 DO
+			res := n * res;
+			n := n - 1
+		END;
+		Write(res); WriteLn
+	END Factorial;
+
+	(* 计算ax+b与ax^2+bx+c *)
+	PROCEDURE Polynomial;
+	TYPE
+		x = INTEGER;
+		coefficient = RECORD
+			a = INTEGER;
+			b = INTEGER;
+			c = INTEGER
+		END;
+	VAR 
+		co : ARRAY 1 OF coefficient;
+		res : ARRAY 2 OF INTEGER;
+		i : INTEGER;
+	BEGIN
+		READ(co[0].a); READ(co[0].b); READ(co[0].c); READ(x); 
+		res[0] := co[0].a * x + co[0].b;
+		res[1] := co[0].a * x * x + co[0].b * x + co[0].c;
+		Write(res[0]); Write(res[1]); WriteLn
+	END Polynomial;
+END calculate.
