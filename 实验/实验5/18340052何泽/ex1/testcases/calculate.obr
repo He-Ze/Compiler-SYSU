@@ -8,9 +8,9 @@ Module calculate;
 		IF n = 0 THEN res := 0 END;
 		WHILE n > 1 DO
 			res := n * res;
-			n := n - 1;
+			n := n - 1
 		END;
-		Write(res); WriteLn;
+		Write(res); WriteLn
 	END Factorial;
 
 	(* 计算ax+b与ax^2+bx+c *)
@@ -20,7 +20,7 @@ Module calculate;
 		coefficient = RECORD
 			a = INTEGER;
 			b = INTEGER;
-			c = INTEGER;
+			c = INTEGER
 		END;
 	VAR 
 		co : ARRAY 1 OF coefficient;
@@ -30,6 +30,6 @@ Module calculate;
 		READ(co[0].a); READ(co[0].b); READ(co[0].c); READ(x); 
 		res[0] := co[0].a * x + co[0].b;
 		res[1] := co[0].a * x * x + co[0].b * x + co[0].c;
-		Write(res[0]); Write(res[1]); WriteLn;
+		Write(res[0]); Write(res[1]); WriteLn
 	END Polynomial;
-END calculate.;
+END calculate.
