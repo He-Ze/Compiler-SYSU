@@ -1,0 +1,477 @@
+import java_cup.runtime.*;
+import exceptions.*;
+import callgraph.*;
+import java.util.*;
+import java.io.*;
+
+parser code {:
+	public CallGraph graph;
+	public Vector<String> IdentifierVector;
+	public Map typeMap;
+	public Vector<Vector<String>> a;
+	public Vector<Vector<String>> b;
+	public Vector<String> c;
+:}
+
+init with {:  
+	graph = new CallGraph();
+	IdentifierVector= new Vector<String>();
+	typeMap = new HashMap();
+	a = new Vector<Vector<String>>();
+	b = new Vector<Vector<String>>();
+	c = new Vector<String>();
+:};
+
+scan with {: 
+	return getScanner().next_token(); 
+:};
+
+terminal MODULE,PROCEDURE,BEGIN,END,IF,THEN,ELSIF,ELSE,WHILE,DO,OF;
+terminal INTEGER,BOOLEAN,VAR,TYPE,RECORD,CONST,ARRAY,READ,WRITE,WRITELN; 
+terminal PLUS,MINUS,TIMES,DIVIDE,MOD;
+terminal EQUAL,NOTEQUAL,LT,LE,GT,GE;
+terminal AND,OR,NOT;
+terminal ASSIGN,COLON,LPAREN, RPAREN,LBRACKET,RBRACKET;
+terminal SEMI,COMMA,DOT;
+terminal String IDENTIFIER;
+terminal String  NUMBER;
+
+non terminal moduleBlock,begin_block,declarations,procedure_declaration, procedure_body,const_declare,type_declare,var_declare,const_list,type_list,var_list,var_if;
+non terminal field_list,field_one,statement_sequence,statement,while_statement,if_statement,else_statement,elsif_statement;
+non terminal procedure_call, assignment,readORwrite;
+non terminal Integer identifier_list;
+non terminal String procedure_heading,formal_parameters,fp_section,type,record_type,fp_section_list,array_type,actual_parameters,expression,expression_list,simple_expression,term,term_list,factor,selector ;
+
+precedence right ASSIGN;
+precedence left OR;
+precedence left AND;
+precedence right NOT;
+precedence left EQUAL, NOTEQUAL, LT, LE, GT, GE;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE, MOD;
+precedence left LPAREN;
+
+moduleBlock ::= MODULE IDENTIFIER:id1 SEMI declarations begin_block END IDENTIFIER:id2 DOT
+{:
+	for (int i = 0; i < a.size(); i++) {
+		for (int j = 0; j < a.elementAt(i).size(); j++){
+			parser.graph.addCallSite(c.elementAt(i) + (j + 1), 
+				c.elementAt(i) + "()", 
+				a.elementAt(i).elementAt(j) + b.elementAt(i).elementAt(j));
+			parser.graph.addEdge(c.elementAt(i) + (j + 1), a.elementAt(i).elementAt(j));
+		}
+	}
+	parser.graph.show();
+:}; 
+
+begin_block ::= BEGIN statement_sequence | ;
+declarations ::= const_declare type_declare var_declare procedure_declaration;
+const_declare ::= CONST const_list |  ;
+const_list	::=	const_list IDENTIFIER:id EQUAL expression:e SEMI | ;
+type_declare ::= TYPE type_list | ;
+type_list ::= type_list IDENTIFIER:id EQUAL type:t SEMI | ;
+var_declare ::= VAR var_list | ;
+var_list ::= var_list identifier_list:id_list COLON type:t SEMI 
+{:
+	for (int i = 0; i < IdentifierVector.size(); i++){
+		typeMap.put(IdentifierVector.elementAt(i), t.toString());
+	}
+	IdentifierVector.clear();
+:}
+| ;
+
+procedure_declaration ::= procedure_declaration procedure_heading:id1 SEMI procedure_body:id2 SEMI 
+{:
+	if (id1.toString().equals(id2.toString()) == false)
+		throw new ParameterMismatchedException();
+:}
+| ;
+
+procedure_body ::= declarations begin_block END IDENTIFIER:id 
+{:
+	RESULT = id;
+:};
+
+procedure_heading ::= PROCEDURE IDENTIFIER:id formal_parameters:fp
+{:
+	RESULT = id;
+	parser.graph.addProcedure(id, id + "(" + fp.toString() + ")");
+	c.addElement(id.toString());
+	a.addElement(new Vector<String>());
+	b.addElement(new Vector<String>());
+:};
+
+formal_parameters ::= LPAREN fp_section_list:fp_s_l RPAREN 
+{:
+	RESULT = fp_s_l.toString();
+:}
+| LPAREN RPAREN
+{:
+	RESULT = "";
+:}
+| 
+{:
+	RESULT = "";
+:};
+
+fp_section_list ::= fp_section_list:fp_s_l SEMI fp_section:fp_s
+{:
+	RESULT = fp_s_l.toString() + ", " + fp_s.toString();
+:}
+| fp_section:fp_s
+{:
+	RESULT = fp_s.toString();
+:};
+
+fp_section ::= var_if identifier_list:id_list COLON type:t
+{:
+	RESULT = "";
+	String temp = t.toString();
+	for (int i = 0; i < id_list.intValue(); i++) {
+		RESULT += temp;
+		if (i != id_list.intValue() - 1) 
+			RESULT += ", ";
+	}
+	IdentifierVector.clear();
+:};
+
+type ::= IDENTIFIER:id 
+{:
+	RESULT = id.toString();
+:}
+| array_type: at 
+{:
+	RESULT = at.toString();
+:}
+| record_type: rt
+{:
+	RESULT = rt.toString();
+:}
+| INTEGER
+{:
+	RESULT = "INTEGER";
+:}
+| BOOLEAN
+{:
+	RESULT = "BOOLEAN";
+:};
+
+record_type ::= RECORD field_list END 
+{:
+	RESULT = "RECORD";
+:};
+
+field_list ::= field_list SEMI field_one | field_one;
+field_one ::= identifier_list COLON type | ;
+var_if ::= VAR | ;
+
+array_type ::= ARRAY expression:ex OF type:t
+{:
+	RESULT = t.toString() + "[" + ex.toString() + "]";
+:};
+
+identifier_list ::=	IDENTIFIER:id 
+{:
+	IdentifierVector.addElement(id.toString());
+	RESULT = new Integer(1);
+:}
+| identifier_list:id_list COMMA IDENTIFIER:id
+{:
+	IdentifierVector.addElement(id.toString());
+	RESULT = id_list.intValue() + 1;
+:};
+
+statement_sequence ::=	statement | statement_sequence SEMI statement;
+statement ::= assignment | procedure_call | if_statement | while_statement | readORwrite | ;
+while_statement ::=	WHILE expression:e DO statement_sequence END;
+if_statement ::= IF expression:e THEN statement_sequence elsif_statement else_statement END;
+elsif_statement ::=	elsif_statement ELSIF expression THEN statement_sequence | ;
+else_statement ::=	ELSE statement_sequence | ;
+
+readORwrite ::= READ LPAREN expression RPAREN 
+| READ expression RPAREN 
+{:	
+	if (true) 
+		throw new MissingLeftParenthesisException();	
+:}
+| READ LPAREN expression 	
+{:	
+	if (true) 
+		throw new MissingRightParenthesisException();	
+:}
+| WRITE expression RPAREN 
+{:	
+	if (true) 
+		throw new MissingLeftParenthesisException();	
+:}
+| READ LPAREN RPAREN
+{:
+	if (true) 
+		throw new MissingOperatorException();
+:}
+| WRITE LPAREN RPAREN
+{:
+	if (true) 
+		throw new MissingOperatorException();
+:}
+| WRITE LPAREN expression 	
+{:	
+	if (true) 
+		throw new MissingRightParenthesisException();
+:}
+| WRITE LPAREN expression RPAREN 
+| WRITELN;
+
+procedure_call ::= IDENTIFIER:id actual_parameters: ap 
+{:
+	a.elementAt(a.size() - 1).addElement(id.toString());
+	b.elementAt(b.size() - 1).addElement(ap.toString());
+:};
+
+actual_parameters ::= LPAREN expression_list:ex_l RPAREN
+{:
+	RESULT = "(" + ex_l.toString() + ")";
+:}
+| LPAREN RPAREN 
+{:
+	RESULT = "()";
+:};
+
+expression_list ::=	expression:e 
+{:
+	RESULT = e.toString();
+:}
+| expression_list:ex_l COMMA expression:e
+{:
+	RESULT = ex_l.toString() + "," + e.toString();
+:};
+
+assignment ::= IDENTIFIER:id selector:s  ASSIGN expression:e 
+{:
+	if (typeMap.get(id.toString()).equals("BOOLEAN")) {
+		if (typeMap.get(e.toString()) == null) {
+			throw new TypeMismatchedException();
+		}
+	}
+:};
+
+expression ::= simple_expression:se1 EQUAL simple_expression:se2 
+{:
+	RESULT = se1.toString() + " = " + se2.toString();
+	typeMap.put(se1.toString() + " = " + se2.toString(), "BOOLEAN");
+:}
+| simple_expression:se1 EQUAL
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| EQUAL simple_expression:se1 
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| simple_expression:se1 NOTEQUAL simple_expression:se2 
+{:
+	RESULT = se1.toString() + " # " + se2.toString();
+	typeMap.put(se1.toString() + " # " + se2.toString(), "BOOLEAN");
+:}
+| simple_expression:se1 NOTEQUAL
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| NOTEQUAL simple_expression:se1 
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| simple_expression:se1 LE simple_expression:se2
+{:
+	RESULT = se1.toString() + " <= " + se2.toString();
+	typeMap.put(se1.toString() + " <= " + se2.toString(), "BOOLEAN");
+:} 
+| simple_expression:se1 LE
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| LE simple_expression:se1 
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| simple_expression:se1 LT simple_expression:se2
+{:
+	RESULT = se1.toString() + " < " + se2.toString();
+	typeMap.put(se1.toString() + " < " + se2.toString(), "BOOLEAN");
+:} 
+| simple_expression:se1 LT
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| LT simple_expression:se1 
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| simple_expression:se1 GE simple_expression:se2
+{:
+	RESULT = se1.toString() + " >= " + se2.toString();
+	typeMap.put(se1.toString() + " >= " + se2.toString(), "BOOLEAN");
+:}
+| simple_expression:se1 GE
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| GE simple_expression:se1 
+{:
+	if (true) 
+		throw new MissingOperandException();
+:} 
+| simple_expression:se1 GT simple_expression:se2
+{:
+	RESULT = se1.toString() + " > " + se2.toString();
+	typeMap.put(se1.toString() + " > " + se2.toString(), "BOOLEAN");
+:}
+| simple_expression:se1 GT
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| GT simple_expression:se1 
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| simple_expression:se1
+{:
+	RESULT = se1.toString();
+:};
+
+simple_expression ::= term_list:t_l 
+{:
+	RESULT = t_l.toString();
+:}
+| PLUS term_list:t_l 
+{:
+	RESULT = t_l.toString();
+:}
+| MINUS term_list:t_l 
+{:
+	RESULT = "-" + t_l.toString();
+:};
+
+term_list ::= term_list:t_l PLUS term:t 
+{:
+	RESULT = t_l.toString() + " + " + t.toString();
+:}
+| term_list:t_l PLUS
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| term_list:t_l MINUS term:t 
+{:
+	RESULT = t_l.toString() + " - " + t.toString();
+:}
+| term_list:t_l MINUS
+{:
+	if (true)
+		throw new MissingOperandException();
+:}
+| term_list:t_l OR term:t 
+{:
+	RESULT = t_l.toString() + " OR " + t.toString();
+:}
+| term_list:t_l OR
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| OR term:t
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| term:t 
+{:
+	RESULT = t.toString();
+:};
+
+term ::= factor:f 
+{:
+	RESULT = f.toString();
+:}
+| term:t TIMES factor:f
+{:
+	RESULT = t.toString() +  " * " + f.toString();
+:}
+| TIMES factor:f
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| term:t DIVIDE factor:f 
+{:
+	RESULT = t.toString() +  " DIV " + f.toString();
+:}
+| DIVIDE factor:f
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| term:t MOD factor:f
+{:
+	RESULT = t.toString() +  " MOD " + f.toString();
+:}
+| MOD factor:f
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| term:t AND factor:f
+{:
+	RESULT = t.toString() +  " & " + f.toString();
+:}
+| AND factor:f
+{:
+	if (true) 
+		throw new MissingOperandException();
+:}
+| term:t factor:f {:
+	if (true) 
+		throw new MissingOperatorException();
+:};
+
+factor ::= IDENTIFIER:id selector:se 
+{:
+	RESULT = id.toString() + se.toString();
+:}
+| NUMBER:n 
+{:
+	RESULT = n.toString();
+:}
+| LPAREN expression:e RPAREN 
+{:
+	RESULT = e.toString();
+:}
+| NOT factor:f
+{:
+	RESULT = "~" + f.toString();
+:};
+
+selector ::= selector:se DOT IDENTIFIER:id 
+{:
+	RESULT = se.toString() + "." + id.toString();
+:}
+| 
+selector:se LBRACKET expression:e RBRACKET 
+{:
+	RESULT = se.toString() + "["+ e.toString() +"]";
+:}
+| 
+{:
+	RESULT = "";
+:};

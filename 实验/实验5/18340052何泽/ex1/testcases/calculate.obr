@@ -18,9 +18,7 @@ Module calculate;
 	TYPE
 		x = INTEGER;
 		coefficient = RECORD
-			a = INTEGER;
-			b = INTEGER;
-			c = INTEGER
+			a, b, c : INTEGER;
 		END;
 	VAR 
 		co : ARRAY 1 OF coefficient;
